@@ -1,0 +1,95 @@
+.employee-details-page-avatar-content-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+
+    max-height: auto;
+    height: auto;
+}
+
+.employee-details-page-tabs-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+
+    max-height: calc(100svh - 56px - 20px - 180px - 70px);
+    height: calc(100svh - 56px - 20px - 180px - 70px);
+}
+
+.small-employee-details-page-tabs-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+}
+
+.avatar-container {
+    width: 160px;
+    height: 160px;
+    overflow: hidden;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 0.5px solid var(--light-gray-color);
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.5s ease;
+}
+
+.avatar-container:hover .overlay {
+    display: block;
+    background: rgba(0, 0, 0, .3);
+}
+
+.avatar-container button {
+    position: absolute;
+    left: 56px;
+    top: 56px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity .35s ease;
+}
+
+.avatar-container:hover button {
+    opacity: 1;
+}
+
+.avatar-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.employee-full-name {
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 30px;
+}
+
+.employee-full-name-container {
+    word-break: break-all;
+    max-width: calc(100% - 160px - 136px);
+}

@@ -1,0 +1,56 @@
+.project-details-stages-container {
+    padding: 15px;
+    border-radius: 5px;
+
+    overflow-y: auto;
+    max-width: calc(100vw - 56px - 20px - 72px - 24px);
+    width: calc(100vw - 56px - 20px - 72px - 24px);
+    height: calc(100svh - 56px - 72px - 92px - 37px - 24px - 48px);
+    max-height: calc(100svh - 56px - 72px - 92px - 37px - 24px - 48px);
+}
+
+.small-project-details-stages-container {
+    padding: 15px;
+    border-radius: 5px;
+
+    overflow-y: auto;
+    max-width: calc(100vw - 20px - 20px - 24px);
+    width: calc(100vw - 20px - 20px - 24px);
+    height: calc(100svh - 56px - 40px - 92px - 37px - 24px - 48px);
+    max-height: calc(100svh - 56px - 40px - 92px - 37px - 24px - 48px);
+}
+
+.hierarchy-tree-invisible {
+    display: none;
+}
+
+.hierarchy-tree ul,
+.hierarchy-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+}
+
+/* This padding sets alignment of the nested nodes. */
+.hierarchy-tree .mat-nested-tree-node div[role=group] {
+    padding-left: 48px;
+}
+
+.mat-tree-node {
+    padding-left: 0px !important;
+}
+
+.mat-tree-node-without-childs {
+    padding-left: 48px !important;
+}
+
+.mat-nested-tree-node .hovered {
+    background: #ececec;
+    background-clip: content-box;
+    cursor: pointer;
+}
+
+.mat-tree-node .hovered {
+    background: #ececec;
+    cursor: pointer;
+}

@@ -1,0 +1,132 @@
+<div class="project-details-stages-container" [class.small-project-details-stages-container]="IsSmallScreen()">
+    <div class="row p-0 m-0">
+        <div class="col-auto">
+            <button style="height: 40px;" mat-stroked-button (click)="ExpandAll()" color="primary">
+                <div class="d-flex align-items-center">
+                    <span class="material-symbols-outlined" [class]="IsSmallScreen() ? '' : 'pe-2'">
+                        zoom_out_map
+                    </span>
+                    <span *ngIf="!IsSmallScreen()">Развернуть всё</span>
+                </div>
+            </button>
+        </div>
+        <div class="col-auto">
+            <button style="height: 40px;" mat-stroked-button (click)="CollapseAll()" color="primary">
+                <div class="d-flex align-items-center">
+                    <span class="material-symbols-outlined" [class]="IsSmallScreen() ? '' : 'pe-2'">
+                        zoom_in_map
+                    </span>
+                    <span *ngIf="!IsSmallScreen()">Свернуть всё</span>
+                </div>
+            </button>
+        </div>
+        <div class="col-auto" [class]="IsSmallScreen()? 'p-0 mt-1 ps-2 pe-2': ''">
+            <div class="custom-field-container" style="width: 300px;" [class.w-auto]="IsSmallScreen()">
+                <mat-form-field appearance="outline" class="custom-field">
+                    <input matInput type="text" placeholder="Поиск этапов..."
+                        [(ngModel)]="pageSettings.currentFilterString" (keyup.enter)="pageSettings.ApplyFilter()"
+                        (keyup.esc)="pageSettings.ClearFilterAndRefresh()">
+                    <button matTooltip="Поиск" mat-icon-button matPrefix color="primary"
+                        (click)="pageSettings.ApplyFilter()">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                    <button *ngIf="pageSettings.currentFilterString" matTooltip="Сбросить" mat-icon-button matSuffix
+                        color="primary" (click)="pageSettings.ClearFilterAndRefresh()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <div class="row p-0 m-0" style="padding-top: 20px!important;">
+        <div class="division-page-entity-nested-list-container">
+            <div>
+                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="hierarchy-tree">
+                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                        <div class="mat-tree-node mat-tree-node-without-childs row m-0"
+                            [class.hovered]="node.mouseOvered" (mouseover)="node.mouseOvered=true"
+                            (mouseout)="node.mouseOvered=false">
+                            <div class="col-auto p-0 m-0 d-flex align-items-center">
+                                <span style="font-size: 20px" class="material-symbols-outlined main-color">
+                                    circle
+                                </span>
+                            </div>
+                            <div class="col-auto p-0 m-0">
+                                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <a mat-menu-item [routerLink]='"/ClientView/Project/Stages/Details/" + node.id'>
+                                        <mat-icon>info_outline</mat-icon>
+                                        <span>Открыть подробности</span>
+                                    </a>
+                                </mat-menu>
+                            </div>
+                            <div class="col-auto p-0 m-0">
+                                <span style="font-size: 16px;">{{node.name}}</span>
+                            </div>
+                            <div class="col m-0 d-flex justify-content-end align-items-center"
+                                [class]="IsSmallScreen() ? 'p-0 justify-content-start':'justify-content-end'">
+                                <span style="font-size: 20px" class="material-symbols-outlined"
+                                    [class]="GetCompletionStatusClass(node)">
+                                    radio_button_checked
+                                </span>
+                                <div style="width: 150px;">
+                                    <span [class]="GetCompletionStatusClass(node)">&nbsp;{{GetCompletionStatus(node)}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tree-node>
+                    <mat-nested-tree-node *matTreeNodeDef="let node; when: HasChild" matTreeNodeToggle>
+                        <div class="mat-tree-node row m-0" [class.hovered]="node.mouseOvered"
+                            (mouseover)="node.mouseOvered=true" (mouseout)="node.mouseOvered=false">
+                            <div class="col-auto p-0 m-0">
+                                <button [matTooltip]="treeControl.isExpanded(node) ? 'Свернуть' : 'Развернуть'"
+                                    color="primary" mat-icon-button matTreeNodeToggle>
+                                    <mat-icon class="mat-icon-rtl-mirror">
+                                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                    </mat-icon>
+                                </button>
+                            </div>
+                            <div class="col-auto p-0 m-0 d-flex align-items-center">
+                                <span style="font-size: 20px" class="material-symbols-outlined main-color">
+                                    radio_button_checked
+                                </span>
+                            </div>
+                            <div class="col-auto p-0 m-0">
+                                <button mat-icon-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()"
+                                    matTooltip="Действия">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    <a mat-menu-item [routerLink]='"/ClientView/Project/Stages/Details/" + node.id'>
+                                        <mat-icon>info_outline</mat-icon>
+                                        <span>Открыть подробности</span>
+                                    </a>
+                                </mat-menu>
+                            </div>
+                            <div class="col-auto p-0 m-0">
+                                <span style="font-size: 16px;">{{node.name}}</span>
+                            </div>
+                            <div class="col m-0 d-flex justify-content-end align-items-center"
+                                [class]="IsSmallScreen() ? 'ps-5 justify-content-start':'justify-content-end'">
+                                <span style="font-size: 20px" class="material-symbols-outlined"
+                                    [class]="GetCompletionStatusClass(node)">
+                                    radio_button_checked
+                                </span>
+                                <div style="width: 150px;">
+                                    <span
+                                        [class]="GetCompletionStatusClass(node)">&nbsp;{{GetCompletionStatus(node)}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div [class.hierarchy-tree-invisible]="!treeControl.isExpanded(node)" role="group">
+                            <ng-container matTreeNodeOutlet></ng-container>
+                        </div>
+                    </mat-nested-tree-node>
+                </mat-tree>
+            </div>
+        </div>
+    </div>
+</div>

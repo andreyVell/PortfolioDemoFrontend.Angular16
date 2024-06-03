@@ -1,0 +1,123 @@
+<app-navigation-header (searchFieldContentChanged)="pageSettings.OnFilterStringChanged($event)"
+    (searchFieldEnterPressed)="pageSettings.ApplyFilter()" [isSarchFieldVisible]='true'
+    (searchFieldEscPressed)="pageSettings.ClearFilterAndRefresh()" searchFieldPlaceHolder="Поиск ролей...">
+    <div class="workblock-background">
+        <div class="row p-0 m-0">
+            <div *ngIf="!IsSmallScreen()" class="col-auto">
+                <app-employees-menu></app-employees-menu>
+            </div>
+            <div class="col"
+                [class]='IsSmallScreen()? "small-employee-page-main-content-container" : "employee-page-main-content-container"'>
+                <div class="row p-0 m-0 d-flex w-100 justify-content-between">
+                    <div class="col-auto">
+                        <span style="font-size: 24px; font-weight: 500;">Роли</span>
+                    </div>
+                    <div *ngIf="HasCreateAccessTo('AvetonRole')" class="col-auto">
+                        <button mat-flat-button color="primary" (click)="CreateRole()"> 
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined" [class]="IsSmallScreen() ? '' : 'pe-2'">
+                                    add_moderator
+                                </span>
+                                <span *ngIf="!IsSmallScreen()">Добавить роль</span>
+                            </div>
+                        </button>
+                        
+                    </div>
+                </div>
+                <div class="row p-0 m-0 mt-2 justify-content-between">
+                    <!-- page controling  -->
+                    <div class="col-auto d-flex justify-content-start align-items-center">
+                        <span class="elements-per-page-label">Элементов на странице:&nbsp;</span>
+                        <div class="custom-field-container" style="max-width: 100px;">
+                            <mat-form-field appearance="outline" class="custom-field">
+                                <mat-select [(value)]="pageSettings.itemsPerPage"
+                                    (selectionChange)="pageSettings.ItemsPerPageChanged()">
+                                    <mat-option *ngFor="let itemsPerPageNumber of pageSettings.itemsPerPageOptions"
+                                        [value]="itemsPerPageNumber">{{itemsPerPageNumber}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-auto p-0 d-flex justify-content-end align-items-center">
+                        <div style="min-width: 250px;" class="d-flex justify-content-end align-items-center">
+                            <span style="font-size: 16px; margin-right: 10px;">{{pageSettings.CurrentPageMin()}} -
+                                {{pageSettings.CurrentPageMax()}} из
+                                {{pageSettings.totalItems}}</span>
+                            <button mat-icon-button color="primary"
+                                [disabled]="!pageSettings.IsPreviousPageButtonActive()"
+                                (click)="pageSettings.PreviousPageClick()">
+                                <mat-icon>arrow_back_ios</mat-icon>
+                            </button>
+                            <button mat-icon-button color="primary" [disabled]="!pageSettings.IsNextPageButtonActive()"
+                                (click)="pageSettings.NextPageClick()">
+                                <mat-icon>arrow_forward_ios</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row p-0 m-0">
+                    <!-- table -->
+                    <div [class]='IsSmallScreen()? "small-employee-page-entity-table-container" : "employee-page-entity-table-container"'>
+                        <table class="table table-hover m-0 table-sticky-header" style="max-width: 50000px;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 36px;" class="text-left"></th>
+                                    <th [style]='IsSmallScreen()? "min-width: 200px;" : "width: 300px;"' class="text-left">Название</th>
+                                    <th style="width: 120px;" class="text-left">По умолчанию</th>
+                                    <th style="width: 130px;" class="text-left">Полный доступ</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let role of roles" (dblclick)="OpenRoleDetailsPage(role)">
+                                    <td class="p-0">
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия"
+                                            aria-label="Example icon-button with a menu">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu">
+                                            <button mat-menu-item (click)="OpenRoleDetailsPage(role)">
+                                                <mat-icon>edit</mat-icon>
+                                                <span>Редактировать</span>
+                                            </button>
+                                            <mat-divider *ngIf="HasDeleteAccessTo('AvetonRole')"></mat-divider>
+                                            <button *ngIf="HasDeleteAccessTo('AvetonRole')" mat-menu-item
+                                                (click)="DeleteRole(role)">
+                                                <mat-icon style="color: red;">delete_outline</mat-icon>
+                                                <span style="color: red;">Удалить</span>
+                                            </button>
+                                        </mat-menu>
+                                    </td>
+                                    <td class="td-text-vertical-center">
+                                        <div class="text-vertical-center">
+                                            <span style="font-size: 16px;">
+                                                {{role.name}}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="td-text-vertical-center">
+                                        <div class="text-vertical-center">
+                                            <mat-icon *ngIf="role.isDefault"
+                                                class="check-active">check_circle</mat-icon>
+                                            <mat-icon *ngIf="!role.isDefault"
+                                                class="check-not-active">check_circle_outline</mat-icon>
+                                        </div>
+                                    </td>
+                                    <td class="td-text-vertical-center">
+                                        <div class="text-vertical-center">
+                                            <mat-icon *ngIf="role.isSystemAdministrator"
+                                                class="check-active">check_circle</mat-icon>
+                                            <mat-icon *ngIf="!role.isSystemAdministrator"
+                                                class="check-not-active">check_circle_outline</mat-icon>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-navigation-header>

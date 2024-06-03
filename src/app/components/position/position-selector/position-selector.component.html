@@ -1,0 +1,93 @@
+<div style="padding: 15px; width: 80vw; max-width: 80vw;">
+    <div class="row m-0 p-0">
+        <div class="col m-0 p-0 d-flex align-items-center">
+            <span style="font-weight: 500; font-size: 25px;">
+                Выберите должность
+            </span>
+        </div>
+        <div class="col-auto m-0 p-0">
+            <button mat-icon-button color="primary" matTooltip="Закрыть" (click)="CloseForm()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0 justify-content-between">
+        <div class="col-auto d-flex justify-content-start align-items-center">
+            <span class="elements-per-page-label">Элементов на странице:&nbsp;</span>
+            <div class="custom-field-container" style="max-width: 100px;">
+                <mat-form-field appearance="outline" class="custom-field">
+                    <mat-select [(value)]="pageSettings.itemsPerPage"
+                        (selectionChange)="pageSettings.ItemsPerPageChanged()">
+                        <mat-option *ngFor="let itemsPerPageNumber of pageSettings.itemsPerPageOptions"
+                            [value]="itemsPerPageNumber">{{itemsPerPageNumber}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-auto p-0 d-flex justify-content-end align-items-center">
+            <div style="min-width: 250px;" class="d-flex justify-content-end align-items-center">
+                <span style="font-size: 16px; margin-right: 10px;">{{pageSettings.CurrentPageMin()}} -
+                    {{pageSettings.CurrentPageMax()}} из
+                    {{pageSettings.totalItems}}</span>
+                <button mat-icon-button color="primary" matTooltip="Предыдущая страница" [disabled]="!pageSettings.IsPreviousPageButtonActive()"
+                    (click)="pageSettings.PreviousPageClick()">
+                    <mat-icon>arrow_back_ios</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" matTooltip="Следующая страница" [disabled]="!pageSettings.IsNextPageButtonActive()"
+                    (click)="pageSettings.NextPageClick()">
+                    <mat-icon>arrow_forward_ios</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row m-0 p-0 d-flex align-items-center" style="margin-top: 10px!important;">        
+        <div class="col">
+            <mat-form-field appearance="outline" class="w-100 remove-form-field-subscription">
+                <mat-label>
+                    Поиск
+                </mat-label>
+                <input matInput (keyup.enter)="pageSettings.ApplyFilter()"
+                    [(ngModel)]="pageSettings.currentFilterString" placeholder="Введите название должности">
+            </mat-form-field>
+        </div>
+        <div class="col-auto p-0 m-0">
+            <button mat-icon-button color="primary" matTooltip="Поиск" (click)="pageSettings.ApplyFilter()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+        <div *ngIf="HasCreateAccessTo('Position')" class="col-auto">
+            <button mat-icon-button color="primary" matTooltip="Создать должность" (click)="CreatePosition()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0" style="margin-top: 10px!important;">
+        <div class="dialog-entity-selector-table-container">
+            <table class="table table-hover m-0 table-sticky-header" style="max-width: 50000px;">
+                <thead>
+                    <tr>
+                        <th style="width: 1px;" class="text-left"></th>
+                        <th style="width: 300px;" class="text-left">Название</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let position of positions" (dblclick)="PositionSelected(position)">
+                        <td class="p-0">
+                            <div style="min-height: 48px">
+                            </div>
+                        </td>
+                        <td class="td-text-vertical-center">
+                            <div class="text-vertical-center">
+                                <span style="font-size: 16px;">
+                                    {{position.name}}
+                                </span>
+                            </div>
+                        </td>                        
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

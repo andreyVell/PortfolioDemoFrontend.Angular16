@@ -1,0 +1,132 @@
+<div style="padding: 15px; max-width: 80vw; width: 80vw;">
+    <div class="row m-0 p-0">
+        <div class="col m-0 p-0 d-flex align-items-center">
+            <span style="font-weight: 500; font-size: 25px;">
+                Выберите клиента
+            </span>
+        </div>
+        <div class="col-auto m-0 p-0">
+            <button mat-icon-button color="primary" matTooltip="Закрыть" (click)="CloseForm()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0 justify-content-between">
+        <div class="col-auto d-flex align-items-center">
+            <div class="row p-0 m-0 w-100 d-flex justify-content-center">
+                <mat-chip-listbox class="justify-content-center" [(ngModel)]="displayMode" (ngModelChange)="Refresh()">
+                    <div class="w-100 d-flex justify-content-center m-0">
+                        <mat-chip-option [value]="0">Физ. лица</mat-chip-option>
+                        <mat-chip-option [value]="1">Юр. лица</mat-chip-option>
+                    </div>
+                </mat-chip-listbox>
+            </div>
+        </div>
+        <div class="col-auto d-flex justify-content-start align-items-center">
+            <span class="elements-per-page-label">Элементов на странице:&nbsp;</span>
+            <div class="custom-field-container" style="max-width: 100px;">
+                <mat-form-field appearance="outline" class="custom-field">
+                    <mat-select [(value)]="pageSettings.itemsPerPage"
+                        (selectionChange)="pageSettings.ItemsPerPageChanged()">
+                        <mat-option *ngFor="let itemsPerPageNumber of pageSettings.itemsPerPageOptions"
+                            [value]="itemsPerPageNumber">{{itemsPerPageNumber}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>        
+        <div class="col-auto p-0 d-flex justify-content-end align-items-center">
+            <div style="min-width: 250px;" class="d-flex justify-content-end align-items-center">
+                <span style="font-size: 16px; margin-right: 10px;">{{pageSettings.CurrentPageMin()}} -
+                    {{pageSettings.CurrentPageMax()}} из
+                    {{pageSettings.totalItems}}</span>
+                <button mat-icon-button color="primary" matTooltip="Предыдущая страница"
+                    [disabled]="!pageSettings.IsPreviousPageButtonActive()" (click)="pageSettings.PreviousPageClick()">
+                    <mat-icon>arrow_back_ios</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" matTooltip="Следующая страница"
+                    [disabled]="!pageSettings.IsNextPageButtonActive()" (click)="pageSettings.NextPageClick()">
+                    <mat-icon>arrow_forward_ios</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row m-0 p-0 d-flex align-items-center" style="margin-top: 10px!important;">
+        <div class="col">
+            <mat-form-field appearance="outline" class="w-100 remove-form-field-subscription">
+                <mat-label>
+                    Поиск
+                </mat-label>
+                <input matInput (keyup.enter)="pageSettings.ApplyFilter()"
+                    [(ngModel)]="pageSettings.currentFilterString"
+                    placeholder="ФИО, день рождения, должность, E-mail, номер телефона или роль">
+            </mat-form-field>
+        </div>
+        <div class="col-auto p-0 m-0">
+            <button mat-icon-button color="primary" matTooltip="Поиск" (click)="pageSettings.ApplyFilter()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+        <div *ngIf="(displayMode == 0 && HasCreateAccessTo('Person')) || (displayMode == 1 && HasCreateAccessTo('Organization'))" class="col-auto">
+            <button mat-icon-button color="primary" matTooltip="Добавить клиента" (click)="CreateClient()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0" style="margin-top: 10px!important;">
+        <div class="dialog-entity-selector-table-container">
+            <table *ngIf="displayMode === 0" class="table table-hover m-0 table-sticky-header"
+                style="max-width: 50000px;">
+                <thead>
+                    <tr>
+                        <th style="width: 400px;" class="text-left">Клиент</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let person of persons" (dblclick)="ClientSelected(person)">
+                        <td>
+                            <div class="row m-0 p-0">
+                                <span class="p-0" style="font-size: 16px;">
+                                    {{person.GetLastNameAndInitials()}}
+                                </span>
+                            </div>
+                            <div class="row m-0 p-0">
+                                <span class="p-0" style="font-size: 14px; color: gray;">
+                                    {{person.contactEmail + " " + person.contactPhone}}
+                                </span>
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table *ngIf="displayMode === 1" class="table table-hover m-0 table-sticky-header"
+                style="max-width: 50000px;">
+                <thead>
+                    <tr>
+                        <th style="width: 400px;" class="text-left">Клиент</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let organization of organizations" (dblclick)="ClientSelected(organization)">
+                        <td>
+                            <div class="row m-0 p-0">
+                                <span class="p-0" style="font-size: 16px;">
+                                    {{organization.name + (!!organization.inn ? ' (ИНН: ' +
+                                    organization.inn + ')' : '')}}
+                                </span>
+                            </div>
+                            <div class="row m-0 p-0">
+                                <span class="p-0" style="font-size: 14px; color: gray;">
+                                    {{organization.contactEmail + " " + organization.contactPhone}}
+                                </span>
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

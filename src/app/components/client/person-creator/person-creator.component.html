@@ -1,0 +1,120 @@
+<div>
+    <div class="row m-0 p-0">
+        <div class="col d-flex align-items-center">
+            <span style="font-weight: 500; font-size: 25px;">
+                Новый клиент
+            </span>
+        </div>
+        <div class="col-auto m-0 p-0">
+            <button mat-icon-button color="primary" matTooltip="Закрыть" (click)="CloseForm()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0">
+        <form class="mt-3" [formGroup]="newPersonForm">
+            <div mat-dialog-content class="pt-1 pb-1 ps-0 pe-0 d-flex justify-content-center" style="max-width: 550px">
+                <div class="row mb-2 w-100">
+                    <mat-form-field appearance="outline" class="w-100"
+                        [class.error]="newPersonForm.controls['lastName'].dirty && newPersonForm.hasError('required', 'lastName')">
+                        <mat-label>
+                            Фамилия
+                        </mat-label>
+                        <input matInput type="text" formControlName="lastName">
+                        <mat-hint>
+                            <small
+                                *ngIf="newPersonForm.controls['lastName'].dirty && newPersonForm.hasError('required', 'lastName')"
+                                class="text-danger">
+                                *Необходимо указать фамилию
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100"
+                        [class.error]="newPersonForm.controls['firstName'].dirty && newPersonForm.hasError('required', 'firstName')">
+                        <mat-label>
+                            Имя
+                        </mat-label>
+                        <input matInput type="text" formControlName="firstName">
+                        <mat-hint>
+                            <small
+                                *ngIf="newPersonForm.controls['firstName'].dirty && newPersonForm.hasError('required', 'firstName')"
+                                class="text-danger">
+                                *Необходимо указать имя
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>
+                            Отчество
+                        </mat-label>
+                        <input matInput type="text" formControlName="secondName">                        
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>
+                            Email
+                        </mat-label>
+                        <input matInput type="email" formControlName="contactEmail">                        
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>
+                            Номер телефона
+                        </mat-label>
+                        <input matInput type="text" formControlName="contactPhone">                        
+                    </mat-form-field>                    
+                    <span style="font-weight: 500; font-size: 20px; color: black;">
+                        Данные для входа клиента в систему:
+                    </span>
+                    <mat-form-field appearance="outline" class="w-100" style="margin-top: 15px"
+                        [class.error]="newPersonForm.controls['login'].dirty && newPersonForm.hasError('required', 'login')">
+                        <mat-label>
+                            Логин
+                        </mat-label>
+                        <input matInput type="text" formControlName="login">
+                        <mat-hint>
+                            <small
+                                *ngIf="newPersonForm.controls['login'].dirty && newPersonForm.hasError('required', 'login')"
+                                class="text-danger">
+                                *Необходимо указать логин
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100"
+                        [class.error]="newPersonForm.controls['password'].dirty && newPersonForm.hasError('required', 'password')">
+                        <mat-label>
+                            Пароль
+                        </mat-label>
+                        <input matInput type="text" formControlName="password">
+                        <mat-hint>
+                            <small
+                                *ngIf="newPersonForm.controls['password'].dirty && newPersonForm.hasError('required', 'password')"
+                                class="text-danger">
+                                *Необходимо указать пароль
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div mat-dialog-actions class="action d-flex justify-content-center p-0">
+                <div class="row d-flex justify-content-center w-100">
+                    <div class="col">
+                        <button [disabled]="isPersonCreating" mat-flat-button color="primary" class="w-100 text-center"
+                            type="submit" (click)="OnFormSubmit()">
+                            <span *ngIf="!isPersonCreating; else loading">
+                                Добавить
+                            </span>
+                            <ng-template #loading>
+                                <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                            </ng-template>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button mat-stroked-button [disabled]="isPersonCreating" color="primary" class="w-100 text-center" type="button"
+                            (click)="CloseForm()">
+                            Отмена
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

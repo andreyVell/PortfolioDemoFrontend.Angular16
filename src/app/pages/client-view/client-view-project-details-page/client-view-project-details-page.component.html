@@ -1,0 +1,84 @@
+<app-client-navigation-header [isSarchFieldVisible]='false'>
+    <div class="workblock-background">
+        <div class="row m-0 p-0 d-flex justify-content-center">
+            <div class="col-xxl-8 col-xl-9 col-lg-10 col-md-12 col-sm-12 col-12 m-0 p-0">
+                <div class="row details-page-title-container justify-content-between">
+                    <div class="col-auto m-0 p-0 d-flex align-items-center">
+                        <button matTooltip="Назад" mat-icon-button color="primary" (click)="BackPageClick()">
+                            <mat-icon>arrow_back</mat-icon>
+                        </button>
+                        <span style="font-size: 24px; font-weight: 500;">
+                            Информация о проекте:
+                        </span>
+                    </div>
+                </div>
+                <div class="row p-0 m-0 d-flex">
+                    <div class="col client-details-page-main-content-container"
+                        [class.small-client-details-page-main-content-container]="IsSmallScreen()">
+                        <div class="row m-0 p-0">
+                            <div class="col p-0 m-0">
+                                <div class="row p-0 m-0">
+                                    <div class="col-auto p-0 m-0 d-flex justify-content-center align-items-center">
+                                        <button class="info-button" [matTooltip]="project.name">
+                                            <mat-icon>info_outline</mat-icon>
+                                        </button>
+                                    </div>
+                                    <div class="col-11">
+                                        <span class="project-name-title">
+                                            {{projectHeader}}
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-auto p-0 m-0 d-flex align-items-center">
+                                <div class="row m-0 p-0 d-flex align-items-center"
+                                    *ngIf="project.currentProgress != -1">
+                                    <div class="col m-0 d-flex justify-content-end align-items-center">
+                                        <span style="font-size: 20px" class="material-symbols-outlined"
+                                            [class]="GetCompletionStatusClass()">
+                                            radio_button_checked
+                                        </span>
+                                        <div style="width: 150px;">
+                                            <span
+                                                [class]="GetCompletionStatusClass()">&nbsp;{{GetCompletionStatus()}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row m-0 p-0">
+                                    <span class="p-0 d-flex justify-content-end" style="font-size: 20px; color: gray;">
+                                        {{project.createdOn | date:'dd MMM yyyy' }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row p-0 m-0 mt-4">
+                            <mat-tab-group #tabGroup (selectedTabChange)="TabChanged($event)" mat-stretch-tabs="false"
+                                mat-align-tabs="start">
+                                <mat-tab label="Info">
+                                    <ng-template matTabLabel>
+                                        <span class="tab-header">Основная информация</span>
+                                    </ng-template>
+                                    <ng-template matTabContent>
+                                        <app-client-project-details-info
+                                            [project]="project"></app-client-project-details-info>
+                                    </ng-template>
+                                </mat-tab>
+                                <mat-tab label="Stages">
+                                    <ng-template matTabLabel>
+                                        <span class="tab-header">Этапы</span>
+                                    </ng-template>
+                                    <ng-template matTabContent>
+                                        <app-client-project-details-stages
+                                            [project]="project"></app-client-project-details-stages>
+                                    </ng-template>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</app-client-navigation-header>

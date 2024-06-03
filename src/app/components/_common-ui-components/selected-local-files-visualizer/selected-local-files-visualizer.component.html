@@ -1,0 +1,49 @@
+<div *ngIf="selectedLocalFiles.length > 0" style="padding-bottom: 10px;">
+    <div class="file-image-preview-container">
+        <div class="col-auto p-0 m-0 ps-1 pe-1" *ngFor="let file of GetImagesFromSelectedFiles()">
+            <div class="file-image-container">
+                <img [src]="file.fileContent" alt="Avatar" class="file-image"
+                    *ngIf="file.fileContent; else noImageFound">
+                <ng-template #noImageFound>
+                    <app-loading-indication class="file-image" [width]="72" [height]="72"></app-loading-indication>
+                </ng-template>
+                <div class="image-remove" matTooltip="Открепить" (click)="DeleteFile(file)">
+                    <span class="material-symbols-outlined">
+                        cancel
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row p-0 m-0" style="margin-top: 5px!important"
+        [style]='filesMaxHeight ? "max-height: " + filesMaxHeight + "px; overflow-y: auto; " : ""'>
+        <div class="col p-0 m-0">
+            <div class="row p-0 m-0" *ngFor="let file of GetJustFilesFromSelectedFiles()">
+                <div class="col-auto p-0 m-0 d-flex align-items-center">
+                    <button [disabled]="file.isFileContentProcessing"
+                        [style]="file.isFileContentProcessing? 'padding: 6px!important;':''" mat-icon-button
+                        color="primary" matTooltip="Открепить" (click)="DeleteFile(file)">
+                        <span *ngIf="!file.isFileContentProcessing; else loading">
+                            <mat-icon>delete_outline</mat-icon>
+                        </span>
+                        <ng-template #loading>
+                            <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                        </ng-template>
+                    </button>
+                </div>
+                <div class="file-name-container">
+                    <div class="row p-0 m-0">
+                        <span class="file-name">
+                            {{file.fileName}}
+                        </span>
+                    </div>
+                    <div *ngIf="file.GetFileSize()" class="row p-0 m-0">
+                        <span class="file-size-title">
+                            {{file.GetFileSize()}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

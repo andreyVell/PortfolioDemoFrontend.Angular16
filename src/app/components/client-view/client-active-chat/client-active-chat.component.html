@@ -1,0 +1,231 @@
+<div class="active-chat-container">
+    <div *ngIf="activeChat; else emptyChat" class="col p-0 m-0 h-100 d-flex flex-column">
+        <div class="row top-info">
+            <div class="col-auto p-0 m-0">
+                <button *ngIf="IsSmallScreen()" (click)="BackToChats()" matTooltip="Назад к чатам" mat-icon-button
+                    color="primary">
+                    <span class="material-symbols-outlined">
+                        arrow_back
+                    </span>
+                </button>
+            </div>
+            <div class="col d-flex align-items-center"
+                [class]="IsSmallScreen()? 'chat-name-container-small-screen':'chat-name-container'">
+                <span class="chat-name">
+                    {{activeChat.GetChatName()}}
+                </span>
+            </div>
+            <div class="col-auto p-0">
+                <button *ngIf="activeChat.id" [matMenuTriggerFor]="chatMenu" matTooltip="Информация о чате"
+                    mat-icon-button color="primary">
+                    <span class="material-symbols-outlined">
+                        info
+                    </span>
+                </button>
+                <mat-menu #chatMenu="matMenu">
+
+                </mat-menu>
+            </div>
+            <div class="col-auto d-flex align-items-center">
+                <div class="chat-avatar-image-container">
+                    <img [src]="activeChat.GetChatAvatar()" alt="Avatar" class="chat-avatar-image"
+                        *ngIf="activeChat?.GetChatAvatar(); else noImageFound">
+                    <ng-template #noImageFound>
+                        <img [src]="defaultImageSrc" alt="Default image" class="chat-avatar-image">
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div class="row middle-info top-border bottom-border">
+            <div *ngIf="activeChat.lastMessage; else emptyMessagesTemplate" class="p-0 h-100">
+                <div class="messages-container" ScrollEndTracker [pixelsToScrollBottomToEmitEvent]="500"
+                    (scrollEnd)="LoadMoreMessages()" #scrollableMessagesContainer>
+                    <div class="messages-bottom-margin-container"></div>
+                    <div *ngFor="let message of activeChat.messages; let i = index" class="row m-0 p-0 w-auto d-flex"
+                        [id]="message.id" 
+                        isElementInViewTracker (inView)="MessageInView(message)"
+                        isChatMessageRendered (messageRendered)="MessageRendered(message)">
+                        <div *ngIf="activeChat.NeedToShowHistoryDate(i)" class="system-message">
+                            {{message.createdOn | date:'d MMMM'}}</div>
+                        <div *ngIf="activeChat.NeedToShowNewMessageLabel(message)" class="row m-0 p-0">
+                            <div class="col pe-0 d-flex align-items-center">
+                                <div class="horizontal-center-border w-100"></div>
+                            </div>
+                            <div class="col-auto system-message">
+                                Новые сообщения
+                            </div>
+                            <div class="col ps-0 d-flex align-items-center">
+                                <div class="horizontal-center-border w-100"></div>
+                            </div>
+                        </div>
+                        <div *ngIf="message.isSystem; else notSystemMessage" class="system-message">
+                            {{message.GetText()}}
+                        </div>
+                        <ng-template #notSystemMessage>
+                            <div class="col-auto p-0 m-0 d-flex align-items-end">
+                                <div class="message-owner-avatar-container"
+                                    *ngIf="(activeChat.IsThisMessageYours(message)? !IsSmallScreen() : true) && message.IsLastMessageInGroup()">
+                                    <img [src]="activeChat.GetAvatarForMessageOwner(message)"
+                                        *ngIf="activeChat.GetAvatarForMessageOwner(message); else noMessageOwnerAvatarFound"
+                                        alt="Avatar" class="message-owner-avatar">
+                                    <ng-template #noMessageOwnerAvatarFound>
+                                        <img [src]="defaultImageSrc" alt="Default image" class="message-owner-avatar">
+                                    </ng-template>
+                                </div>
+                            </div>
+                            <div class="col p-0 m-0"
+                                [class]="activeChat.IsThisMessageYours(message) && IsSmallScreen()? 'd-flex justify-content-end':''">
+                                <div *ngIf="activeChat.IsThisMessageYours(message); else notYoursMessage">
+                                    <div *ngIf="!IsSmallScreen(); else yoursMessageForSmallScreen">
+                                        <div [class]='"yours-message " + message.GetGroupStyleClass()'>
+                                            <span *ngIf="message.GetText()" class="yours-message-text">
+                                                {{message.GetText()}}
+                                            </span>
+                                            <ng-container *ngTemplateOutlet="filesVisualizerTemplate"></ng-container>
+                                            <ng-container *ngTemplateOutlet="yourMessageInfo"></ng-container>
+                                        </div>
+                                    </div>
+                                    <ng-template #yoursMessageForSmallScreen>
+                                        <div
+                                            [class]='"yours-message-small-screen " + message.GetGroupStyleClass()+"-small-screen"'>
+                                            <span *ngIf="message.GetText()" class="yours-message-text">
+                                                {{message.GetText()}}
+                                            </span>
+                                            <ng-container *ngTemplateOutlet="filesVisualizerTemplate"></ng-container>
+                                            <ng-container *ngTemplateOutlet="yourMessageInfo"></ng-container>
+                                        </div>
+                                    </ng-template>
+                                    <ng-template #yourMessageInfo>
+                                        <span class="yours-message-info">
+                                            {{message.GetMessageTime()}}
+                                            <div *ngIf="!message.id; else successfullySendedMessage"
+                                                class="sending-info-container">
+                                                <mat-spinner *ngIf="!message.isNotSended" [diameter]="13"></mat-spinner>
+                                                <button style="font-size: 20px!important" *ngIf="message.isNotSended"
+                                                    mat-icon-button color="warn" matTooltip="Отправить повторно"
+                                                    (click)="ReSendMessage(message)" class="small-icon-button">
+                                                    <span class="material-symbols-outlined"
+                                                        style="font-size: 20px!important">
+                                                        refresh
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </span>
+                                    </ng-template>
+                                    <ng-template #successfullySendedMessage>
+                                        <span class="material-symbols-outlined" style="font-size: 20px"
+                                            [matTooltip]="activeChat.IsMessageViewed(message) ? 'Доставлено и прочитано' : 'Доставлено'"
+                                            [ngSwitch]="activeChat.IsMessageViewed(message)">
+                                            <ng-template [ngSwitchCase]="false">done</ng-template>
+                                            <ng-template [ngSwitchCase]="true">done_all</ng-template>
+                                        </span>
+                                    </ng-template>
+                                </div>
+                                <ng-template #notYoursMessage>
+                                    <div [class]='"message " + message.GetGroupStyleClass()'>
+                                        <div class="row m-0 p-0">
+                                            <span class="message-owner-name" *ngIf="message.IsFirstMessageInGroup()">
+                                                {{activeChat.GetDisplayNameForMessageOwner(message)}}
+                                            </span>
+                                        </div>
+                                        <span *ngIf="message.GetText()" class="message-text">
+                                            {{message.GetText()}}
+                                        </span>
+                                        <ng-container *ngTemplateOutlet="filesVisualizerTemplate"></ng-container>
+                                        <span class="message-info">
+                                            {{message.GetMessageTime()}}
+                                        </span>
+                                    </div>
+                                </ng-template>
+                                <ng-template #filesVisualizerTemplate>
+                                    <app-files-visualizer
+                                        [style.max-width]="IsSmallScreen() ? 'calc(100svw - 77px)' : '490px!important'"
+                                        style="display: block; padding-bottom: 10px!important;"
+                                        *ngIf="message.attachedFiles.length > 0" [files]="message.attachedFiles"
+                                        (downloadFileContent)="DownloadFileContent($event)"
+                                        (getImageMediumContent)="GetImageMediumContent($event)"
+                                        (getImageFullContent)="GetImageFullContent($event)"></app-files-visualizer>
+                                </ng-template>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+            <ng-template #emptyMessagesTemplate>
+                <div class="col h-100 d-flex align-items-center">
+                    <div class="row w-100 m-0 p-0 d-flex justify-content-center"
+                        style="padding-bottom: 100px!important;">
+                        <div class="new-chat-avatar-image-container mb-2">
+                            <img [src]="activeChat.GetChatAvatar()" alt="Avatar" class="new-chat-avatar-image"
+                                *ngIf="activeChat?.GetChatAvatar(); else noImageFound">
+                            <ng-template #noImageFound>
+                                <img [src]="defaultImageSrc" alt="Default image" class="new-chat-avatar-image">
+                            </ng-template>
+                        </div>
+                        <span style="font-size: 19px; font-weight: 500; text-align: center">
+                            {{activeChat.GetChatName()}}
+                        </span>
+                        <span class="text-center pt-2">
+                            Здесь будет отображаться история сообщений.
+                            <br>
+                            Напишите первое сообщение!
+                        </span>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+        <div class="row bottom-info">
+            <div class="row p-0 m-0">
+                <div class="col-auto d-flex align-items-center" style="padding: 0px 4px;">
+                    <button mat-icon-button color="primary" matTooltip="Прикрепить" (click)="fileInput.click()">
+                        <span class="material-symbols-outlined">
+                            attach_file
+                        </span>
+                    </button>
+                    <label class="image-upload-container btn btn-bwm" style="display: none;">
+                        <input #fileInput type="file" multiple="multiple" (change)="ProcessInputFiles(fileInput)">
+                    </label>
+                </div>
+                <div class="col p-0 d-flex align-items-center">
+                    <textarea type="text" avetonAutosizeInput [minRows]="1" [maxRows]="8"
+                        [(ngModel)]="activeChat.textForNewMessage"
+                        (keydown.enter)="keydownEnter($event)"
+                        [placeholder]="inputMessagePlaceholder" class="message-input">
+                    </textarea>
+                </div>
+                <div class="col-auto d-flex align-items-center" style="padding: 0px 4px;">
+                    <button mat-icon-button color="primary" [disabled]="isChatCreating || isFilesProcessing.value"
+                        matTooltip="Отправить" class="d-flex align-items-center justify-content-center "
+                        (click)="SendMessage()">
+                        <span class="material-symbols-outlined"
+                            *ngIf="!(isChatCreating || isFilesProcessing.value); else messageIsSending">
+                            arrow_forward
+                        </span>
+                        <ng-template #messageIsSending>
+                            <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                        </ng-template>
+                    </button>
+                </div>
+            </div>
+            <div class="row p-0 m-0">
+                <div class="col p-0 m-0">
+                    <app-selected-local-files-visualizer [filesMaxHeight]="150" (deleteFile)="DeleteFile($event)"
+                        [selectedLocalFiles]="activeChat.selectedFilesForNewMessage"></app-selected-local-files-visualizer>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #emptyChat>
+        <div class="col p-0 m-0 h-100 d-flex flex-column align-items-center justify-content-center">
+            <div class="row d-flex align-items-center" style="padding-bottom: 100px;">
+                <span class="material-symbols-outlined text-center main-light-font-color pb-2" style="font-size: 50px">
+                    forum
+                </span>
+                <br>
+                <span class="text-center">
+                    Выберите чат
+                </span>
+            </div>
+        </div>
+    </ng-template>
+</div>

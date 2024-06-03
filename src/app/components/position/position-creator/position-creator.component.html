@@ -1,0 +1,57 @@
+<div>
+    <div class="row m-0 p-0">
+        <div class="col d-flex align-items-center">            
+            <span style="font-weight: 500; font-size: 25px;">
+                Новая должность
+            </span>
+        </div>
+        <div class="col-auto m-0 p-0">
+            <button mat-icon-button color="primary" matTooltip="Закрыть" (click)="CloseForm()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0">
+        <form class="mt-3" [formGroup]="newPositionForm">
+            <div mat-dialog-content class="pt-1 pb-1 ps-0 pe-0 d-flex justify-content-center" style="max-width: 550px; width: calc(80vw - 24px);">
+                <div class="row mb-2 w-100">
+                    <mat-form-field appearance="outline" class="w-100"
+                        [class.error]="newPositionForm.controls['name'].dirty && newPositionForm.hasError('required', 'name')">
+                        <mat-label>                            
+                            Название
+                        </mat-label>
+                        <input matInput type="text" formControlName="name">
+                        <mat-hint>
+                            <small
+                                *ngIf="newPositionForm.controls['name'].dirty && newPositionForm.hasError('required', 'name')"
+                                class="text-danger">
+                                *Необходимо указать название
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>                    
+                </div>
+            </div>
+            <div mat-dialog-actions class="action d-flex justify-content-center p-0">
+                <div class="row d-flex justify-content-center w-100">
+                    <div class="col">                        
+                        <button [disabled]="isPositionCreating" mat-flat-button color="primary" class="w-100 text-center"
+                            type="submit" (click)="OnFormSubmit()">
+                            <span *ngIf="!isPositionCreating; else loading">
+                                Добавить
+                            </span>
+                            <ng-template #loading>
+                                <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                            </ng-template>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button mat-stroked-button [disabled]="isPositionCreating" color="primary" class="w-100 text-center" type="button"
+                            (click)="CloseForm()">
+                            Отмена
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

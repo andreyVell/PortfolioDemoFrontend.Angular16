@@ -1,0 +1,51 @@
+<div *ngIf="!IsSmallScreen(); else smallScreenTemplate" class="form-container">
+    <div class="row p-0 m-0">
+        <img [src]="images[currentImageIndex].fileContent.fileContent" alt="Изображение" class="full-image"
+            *ngIf="images[currentImageIndex].fileContent.fileContent; else noImageFound">
+        <ng-template #noImageFound>
+            <app-loading-indication class="loading-indicator" [width]="72" [height]="72"></app-loading-indication>
+        </ng-template>
+    </div>
+    <div class="image-close" matTooltip="Закрыть" (click)="CloseForm()">
+        <span class="material-symbols-outlined" style="font-size: 45px">
+            close
+        </span>
+    </div>
+    <div class="image-navigation-next" *ngIf="IsThereANextMessage()" (click)="NextImage()">
+        <span class="material-symbols-outlined" style="font-size: 45px;" matTooltip="Следующее изображение">
+            arrow_forward_ios
+        </span>
+    </div>
+    <div class="image-navigation-prev" *ngIf="IsThereAPreviousMessage()" (click)="PreviousImage()">
+        <span class="material-symbols-outlined" style="font-size: 45px" matTooltip="Предыдущее изображение">
+            arrow_back_ios_new
+        </span>
+    </div>
+</div>
+<ng-template #smallScreenTemplate>
+    <div class="form-container-small-screen">
+        <div class="row p-0 m-0">
+            <img [src]="images[currentImageIndex].fileContent.fileContent" alt="Изображение"
+                class="full-image-small-screen"
+                *ngIf="images[currentImageIndex].fileContent.fileContent; else noImageFound">
+            <ng-template #noImageFound>
+                <app-loading-indication class="loading-indicator" [width]="72" [height]="72"></app-loading-indication>
+            </ng-template>
+        </div>
+        <div class="image-close" matTooltip="Закрыть" (click)="CloseForm()">
+            <span class="material-symbols-outlined" style="font-size: 45px">
+                close
+            </span>
+        </div>
+        <div class="image-navigation-next" *ngIf="IsThereANextMessage()" (click)="NextImage()">
+            <span class="material-symbols-outlined" style="font-size: 45px;" matTooltip="Следующее изображение">
+                arrow_forward_ios
+            </span>
+        </div>
+        <div class="image-navigation-prev" *ngIf="IsThereAPreviousMessage()" (click)="PreviousImage()">
+            <span class="material-symbols-outlined" style="font-size: 45px" matTooltip="Предыдущее изображение">
+                arrow_back_ios_new
+            </span>
+        </div>
+    </div>
+</ng-template>

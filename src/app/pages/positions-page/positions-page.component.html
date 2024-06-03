@@ -1,0 +1,102 @@
+<app-navigation-header (searchFieldContentChanged)="pageSettings.OnFilterStringChanged($event)"
+    (searchFieldEnterPressed)="pageSettings.ApplyFilter()" [isSarchFieldVisible]='true'
+    (searchFieldEscPressed)="pageSettings.ClearFilterAndRefresh()" searchFieldPlaceHolder="Поиск должностей...">
+    <div class="workblock-background">
+        <div class="row p-0 m-0">
+            <div *ngIf="!IsSmallScreen()" class="col-auto">
+                <app-employees-menu></app-employees-menu>
+            </div>
+            <div class="col"
+                [class]='IsSmallScreen()? "small-employee-page-main-content-container" : "employee-page-main-content-container"'>
+                <div class="row p-0 m-0 d-flex w-100 justify-content-between">
+                    <div class="col-auto">
+                        <span style="font-size: 24px; font-weight: 500;">Должности</span>
+                    </div>
+                    <div *ngIf="HasCreateAccessTo('Position')" class="col-auto">
+                        <button mat-flat-button color="primary" (click)="CreatePosition()">
+                            <mat-icon [class.m-0]="IsSmallScreen()">assignment_ind</mat-icon>
+                            <span *ngIf="!IsSmallScreen()">Добавить должность</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="row p-0 m-0 mt-2 justify-content-between">
+                    <!-- page controling  -->
+                    <div class="col-auto d-flex justify-content-start align-items-center">
+                        <span class="elements-per-page-label">Элементов на странице:&nbsp;</span>
+                        <div class="custom-field-container" style="max-width: 100px;">
+                            <mat-form-field appearance="outline" class="custom-field">
+                                <mat-select [(value)]="pageSettings.itemsPerPage"
+                                    (selectionChange)="pageSettings.ItemsPerPageChanged()">
+                                    <mat-option *ngFor="let itemsPerPageNumber of pageSettings.itemsPerPageOptions"
+                                        [value]="itemsPerPageNumber">{{itemsPerPageNumber}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-auto p-0 d-flex justify-content-end align-items-center">
+                        <div style="min-width: 250px;" class="d-flex justify-content-end align-items-center">
+                            <span style="font-size: 16px; margin-right: 10px;">{{pageSettings.CurrentPageMin()}} -
+                                {{pageSettings.CurrentPageMax()}} из
+                                {{pageSettings.totalItems}}</span>
+                            <button mat-icon-button color="primary" matTooltip="Предыдущая страница"
+                                [disabled]="!pageSettings.IsPreviousPageButtonActive()"
+                                (click)="pageSettings.PreviousPageClick()">
+                                <mat-icon>arrow_back_ios</mat-icon>
+                            </button>
+                            <button mat-icon-button color="primary" matTooltip="Следующая страница"
+                                [disabled]="!pageSettings.IsNextPageButtonActive()"
+                                (click)="pageSettings.NextPageClick()">
+                                <mat-icon>arrow_forward_ios</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row p-0 m-0">
+                    <!-- table -->
+                    <div
+                        [class]='IsSmallScreen()? "small-position-page-entity-table-container" : "position-page-entity-table-container"'>
+                        <table class="table table-hover m-0 table-sticky-header" style="max-width: 50000px;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 48px;" class="text-left"></th>
+                                    <th style="width: 300px;" class="text-left">Название</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let position of positions" (dblclick)="OpenPositionDetailsPage(position)">
+                                    <td class="p-0">
+                                        <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия"
+                                            aria-label="Example icon-button with a menu">
+                                            <mat-icon>more_vert</mat-icon>
+                                        </button>
+                                        <mat-menu #menu="matMenu">
+                                            <button mat-menu-item (click)="OpenPositionDetailsPage(position)">
+                                                <mat-icon>edit</mat-icon>
+                                                <span>Редактировать</span>
+                                            </button>
+                                            <mat-divider *ngIf="HasDeleteAccessTo('Position')"></mat-divider>
+                                            <button *ngIf="HasDeleteAccessTo('Position')" mat-menu-item
+                                                (click)="DeletePosition(position)">
+                                                <mat-icon style="color: red;">delete_outline</mat-icon>
+                                                <span style="color: red;">Удалить</span>
+                                            </button>
+                                        </mat-menu>
+                                    </td>
+                                    <td class="td-text-vertical-center">
+                                        <div class="text-vertical-center">
+                                            <span style="font-size: 16px;">
+                                                {{position.name}}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-navigation-header>

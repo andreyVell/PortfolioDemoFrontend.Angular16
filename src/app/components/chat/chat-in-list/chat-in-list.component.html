@@ -1,0 +1,49 @@
+<div class="chat-row-container border-bottom" [routerLink]="'/Chats/' + chat?.id"
+    routerLinkActive="chat-row-container-active">
+    <div class="row m-0 p-0 h-100 flex-nowrap">
+        <div class="col-auto d-flex align-items-center">
+            <div class="small-chat-avatar-image-container">
+                <img [src]="chat?.GetChatAvatar()" alt="Avatar" class="small-chat-avatar-image"
+                    *ngIf="chat?.GetChatAvatar(); else noImageFound">
+                <ng-template #noImageFound>
+                    <img [src]="defaultImageSrc" alt="Default image" class="small-chat-avatar-image">
+                </ng-template>
+            </div>
+        </div>
+        <div class="col p-0 m-0" style="max-width: calc(100% - 73px);">
+            <div class="main-chat-info-container">
+                <div class="row p-0 m-0">
+                    <div class="col p-0 m-0 chat-name">
+                        <span class="chat-name">
+                            {{chat?.GetChatName()}}
+                        </span>
+                    </div>
+                    <div class="col-auto">
+                        <span class="last-message-date-time">
+                            {{chat?.GetLastMessageDateTime()}}
+                        </span>
+                    </div>
+                </div>
+                <div class="row p-0 m-0">
+                    <div class="col p-0 m-0 last-message-content">
+                        <span class="last-message-owner-name">
+                            {{chat?.GetLastMessageOwnerName()}}
+                        </span>
+                        {{chat?.GetLastMessageContent()}}
+                    </div>
+                    <div class="col-auto d-flex align-items-center">
+                        <div *ngIf="chat?.IsLastMessageYours();else lastMessageIsNOTYours">
+                            <div *ngIf="!chat?.IsLastMessageViewed()" class="your-last-unviewed-message-indication">
+                            </div>
+                        </div>
+                        <ng-template #lastMessageIsNOTYours>
+                            <div *ngIf="chat?.GetCountOfLastUnviewedMessages() != null" class="unviewed-messages-indication">
+                                {{chat?.GetCountOfLastUnviewedMessages()}}
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

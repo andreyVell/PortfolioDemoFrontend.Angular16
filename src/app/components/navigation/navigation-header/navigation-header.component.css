@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap');
+
+
+.aveton-main-logo-img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    position: relative;
+}
+
+.aveton-main-logo-label {
+    font-family: 'Rubik Mono One', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.sidenav-content {
+    display: flex;
+    height: calc(100svh - 56px);
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.header-search-bar {
+    background: var(--workblock-background);
+    width: 100%;
+    border-radius: 20px;
+    outline-width: 0;
+    border: 0px;
+    padding-left: 35px;
+    padding-right: 20px;
+}
+
+input.header-search-bar:focus {
+    outline-width: 0;
+}
+
+.header-search-bar-prefix-icon {
+    margin-right: -30px;
+    color: var(--main-light-font-color);
+    z-index: 100;
+}
+
+.menu-item {
+    color: black;
+    text-decoration: none;
+}
+
+.menu-item-active {
+    padding-left: 11px !important;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-left: 5px solid var(--main-color);
+    color: var(--main-light-font-color);
+    background-color: var(--light-gray-color);
+}
+
+.menu-item-active-a {
+    color: var(--main-light-font-color);
+    background-color: var(--light-gray-color);
+}
+
+.small-avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.small-avatar-image-container {
+    margin-right: 8px;
+    height: 40px !important;
+    width: 40px !important;
+    border-radius: 50%;
+    background: white;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.current-user-name {
+    margin-right: 10px;
+    max-width: 210px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.current-user-fullname-container{
+    padding: 0px !important;
+    max-width: calc(100% - 70px);
+    word-break: break-all;
+}
+
+.current-user-fullname {
+    padding: 0px !important;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 16px;
+}
+
+.current-user-login {
+    padding: 0px;
+    font-size: 14px;
+    line-height: 16px;
+    color: gray;
+    padding: 0px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+}

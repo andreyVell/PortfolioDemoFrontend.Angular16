@@ -1,0 +1,65 @@
+<header>
+    <mat-toolbar color="primary" style="max-height: 56px;" class="p-0">
+        <div class="row d-flex w-100 justify-content-between p-0 m-0">
+            <div class="col-auto p-0 d-flex justify-content-start">
+                <button mat-icon-button [avetonBadge]="clientViewChatService.GetCountOfUnviewedChats()"
+                    [isColorReverse]="true" [matMenuTriggerFor]="menu" matTooltip="Меню">
+                    <mat-icon>menu</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <mat-nav-list class="p-0">
+                        <mat-list-item routerLink="/ClientView" routerLinkActive="menu-item-active"
+                            [routerLinkActiveOptions]="{exact: true}" matTooltip="Главная" matTooltipPosition="right">
+                            <a class="d-flex menu-item" routerLink="/ClientView" routerLinkActive="menu-item-active-a"
+                                [routerLinkActiveOptions]="{exact: true}">
+                                <span class="material-symbols-outlined">
+                                    home
+                                </span>
+                                <div style="padding-left: 10px; color: inherit;">Главная</div>
+                            </a>
+                        </mat-list-item>
+                        <mat-list-item [avetonBadge]="clientViewChatService.GetCountOfUnviewedChats()"
+                            routerLink="/ClientView/Chats" routerLinkActive="menu-item-active" matTooltip="Сообщения"
+                            matTooltipPosition="right">
+                            <a class="d-flex menu-item" routerLink="/ClientView/Chats"
+                                routerLinkActive="menu-item-active-a">
+                                <span class="material-symbols-outlined">
+                                    chat
+                                </span>
+                                <div style="padding-left: 10px; color: inherit;">Сообщения</div>
+                            </a>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <button mat-menu-item (click)="signOutClick()">
+                            <mat-icon style="color: red;">exit_to_app</mat-icon>
+                            <span style="color: red;">Выйти из аккаунта</span>
+                        </button>
+                    </mat-nav-list>
+                </mat-menu>
+                <div *ngIf="!IsSmallScreen()" class="d-flex align-items-center p-0 pe-3">
+                    <img class="aveton-main-logo-img" src="assets/images/AVETON_64.png" alt="">
+                    <span class="aveton-main-logo-label">аветон</span>
+                </div>
+            </div>
+            <div *ngIf="isSarchFieldVisible"
+                class="col-xl-5 col-lg-6 col-md-6 col-sm-6 col d-flex justify-content-center align-items-center">
+                <mat-icon class="header-search-bar-prefix-icon">search</mat-icon>
+                <input class="header-search-bar" (keyup.enter)="SearchFieldPressEnter()"
+                    (keyup.esc)="SearchFieldPressEsc(); searchBarText.value = ''" #searchBarText
+                    (input)="onSearchFieldContentChanged(searchBarText.value)" [placeholder]="searchFieldPlaceHolder">
+            </div>
+            <div *ngIf="!IsSmallScreen()" class="col-auto d-flex justify-content-end">
+                <div class="aveton-customer-label">Личный кабинет<br>Заказчика</div>
+            </div>
+        </div>
+    </mat-toolbar>
+</header>
+<mat-drawer-container autosize>
+    <mat-drawer-content>
+        <div class="sidenav-content">
+            <ng-content>
+
+            </ng-content>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

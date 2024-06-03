@@ -1,0 +1,284 @@
+<div style="max-width: 80vw">
+    <div class="row m-0 p-0">
+        <div class="col m-0 d-flex align-items-center">
+            <span style="font-weight: 500; font-size: 25px;">
+                Создание чата
+            </span>
+        </div>
+        <div class="col-auto m-0 p-0">
+            <button mat-icon-button color="primary" matTooltip="Закрыть" (click)="CloseForm()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div *ngIf="!IsSmallScreen(); else smallScreenChatCreator" class="row p-0 m-0 top-border d-flex"
+        style="height: 500px;">
+        <div class="col p-0 m-0" style="width: 375px;">
+            <div class="row m-0 p-0 bottom-border">
+                <div class="custom-field-container mt-2 mb-2" style="width: 374.5px;" [class.w-auto]="IsSmallScreen()">
+                    <mat-form-field appearance="outline" class="custom-field">
+                        <input matInput type="text" placeholder="Поиск..."
+                            [(ngModel)]="pageSettings.currentFilterString" (keyup.enter)="pageSettings.ApplyFilter()"
+                            (keyup.esc)="pageSettings.ClearFilterAndRefresh()">
+                        <button matTooltip="Поиск" mat-icon-button matPrefix color="primary"
+                            (click)="pageSettings.ApplyFilter()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                        <button *ngIf="pageSettings.currentFilterString" matTooltip="Сбросить" mat-icon-button matSuffix
+                            color="primary" (click)="pageSettings.ClearFilterAndRefresh()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="potential-chat-members-cotainer" ScrollEndTracker [pixelsToScrollBottomToEmitEvent]="220"
+                (scrollEnd)="LoadMorePotentialChatMembers()">
+                <div class="row m-0 p-0" *ngFor="let member of potentialChatMembers">
+                    <div class="chat-member-row-container border-bottom d-flex align-items-center"
+                        style="position:relative" (click)="SelectChatMember(member)">
+                        <div class="row m-0 p-0 w-100">
+                            <div class="col-auto d-flex align-items-center">
+                                <div class="small-chat-member-avatar-image-container">
+                                    <img [src]="member?.avatar?.fileContent" alt="Avatar"
+                                        class="small-chat-member-avatar-image"
+                                        *ngIf="member?.avatar?.fileContent; else noImageFound">
+                                    <ng-template #noImageFound>
+                                        <img [src]="defaultImageSrc" alt="Default image"
+                                            class="small-chat-member-avatar-image">
+                                    </ng-template>
+                                </div>
+                            </div>
+                            <div class="col chat-member-name-container">
+                                <div class="row p-0 m-0">
+                                    <div class="col p-0 m-0 d-flex justify-content-start">
+                                        <span class="chat-member-name">
+                                            {{member?.GetDisplayName()}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="IsMemberSelected(member); else selectTemplate" class="chat-member-selected">
+                            <span class="material-symbols-outlined">
+                                done
+                            </span>
+                        </div>
+                        <ng-template #selectTemplate>
+                            <div class="chat-member-move-arrow">
+                                <span class="material-symbols-outlined">
+                                    arrow_forward
+                                </span>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+                <div *ngIf="isChatMembersLoading" class="row m-0 p-0">
+                    <app-loading-indication class="d-flex justify-content-center" [width]="50"
+                        [height]="50"></app-loading-indication>
+                </div>
+            </div>
+        </div>
+        <div class="col p-0 m-0 left-border" style="width: 375px; display: flex; flex-direction: column;">
+            <div class="row m-0 p-0 bottom-border">
+                <div class="custom-field-container mt-2 mb-2" style="width: 374.5px;" [class.w-auto]="IsSmallScreen()">
+                    <mat-form-field appearance="outline" class="custom-field">
+                        <input matInput type="text" placeholder="Название нового чата" [(ngModel)]="newChatName"
+                            maxlength="300">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row m-0 p-0">
+                <span style="padding: 10px; font-size: 16px; font-weight: 500">
+                    Участники: (Выбрано {{selectedPotentialChatMembers.length}})
+                </span>
+            </div>
+            <div class="selected-potential-chat-members-container" style="flex: 1 !important;">
+                <div class="row m-0 p-0" *ngFor="let member of selectedPotentialChatMembers">
+                    <div class="chat-member-row-container border-bottom d-flex align-items-center"
+                        style="position:relative" (click)="UnSelectChatMember(member)">
+                        <div class="row m-0 p-0 w-100">
+                            <div class="col-auto d-flex align-items-center">
+                                <div class="small-chat-member-avatar-image-container">
+                                    <img [src]="member?.avatar?.fileContent" alt="Avatar"
+                                        class="small-chat-member-avatar-image"
+                                        *ngIf="member?.avatar?.fileContent; else noImageFound">
+                                    <ng-template #noImageFound>
+                                        <img [src]="defaultImageSrc" alt="Default image"
+                                            class="small-chat-member-avatar-image">
+                                    </ng-template>
+                                </div>
+                            </div>
+                            <div class="col chat-member-name-container">
+                                <div class="row p-0 m-0">
+                                    <div class="col p-0 m-0 d-flex justify-content-start">
+                                        <span class="chat-member-name">
+                                            {{member?.GetDisplayName()}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-member-move-arrow">
+                            <span style="line-height: 15px; font-size:15px; font-weight: 500; padding-left: 10px;">
+                                Убрать
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-0 p-0">
+                <div class="col p-2">
+                    <button *ngIf="HasCreateAccessTo('Chat')"
+                        [disabled]="isChatOpening || selectedPotentialChatMembers.length == 0" mat-stroked-button
+                        color="primary" class="w-100 text-center" type="submit" (click)="CreateOrOpenChat()">
+                        <span *ngIf="!isChatOpening; else loading" style="font-size: 14px">
+                            {{ newChatName
+                            || selectedPotentialChatMembers.length > 1
+                            || selectedPotentialChatMembers.length == 0
+                            ? 'Создать чат' : 'Перейти к диалогу'}}
+                        </span>
+                        <ng-template #loading>
+                            <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                        </ng-template>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #smallScreenChatCreator>
+        <div class="row p-0 m-0 top-border d-flex" >
+            <div class="col p-0 m-0" style="max-height: calc(80svh - 48px);">
+                <div class="row m-0 p-0 bottom-border">
+                    <div class="custom-field-container mt-2 mb-2" style="width: 374.5px;"
+                        [class.w-auto]="IsSmallScreen()">
+                        <mat-form-field appearance="outline" class="custom-field">
+                            <input matInput type="text" placeholder="Название нового чата" [(ngModel)]="newChatName"
+                                maxlength="300">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row m-0 p-0">
+                    <span style="padding: 10px; font-size: 16px; font-weight: 500">
+                        Участники: (Выбрано {{selectedPotentialChatMembers.length}})
+                    </span>
+                </div>
+                <div class="row m-0 p-0 bottom-border" style="height: 80px">
+                    <div class="selected-potential-chat-members-container-small-screen">
+                        <div class="chat-member-col-container d-flex align-items-center"
+                            *ngFor="let member of selectedPotentialChatMembers" (click)="UnSelectChatMember(member)">
+                            <div class="col-auto m-0 p-0">
+                                <div class="row m-0 p-0 d-flex align-items-center justify-content-center">
+                                    <div class="small-chat-member-avatar-image-container">
+                                        <img [src]="member?.avatar?.fileContent" alt="Avatar"
+                                            class="small-chat-member-avatar-image"
+                                            *ngIf="member?.avatar?.fileContent; else noImageFound">
+                                        <ng-template #noImageFound>
+                                            <img [src]="defaultImageSrc" alt="Default image"
+                                                class="small-chat-member-avatar-image">
+                                        </ng-template>
+                                    </div>
+                                </div>
+                                <div class="row m-0 p-0 chat-member-name-container-small-screen">
+                                    <div class="row p-0 m-0">
+                                        <div class="col p-0 m-0 d-flex justify-content-center">
+                                            <span class="chat-member-name-small-screen">
+                                                {{member?.GetOnlyName()}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-member-remove-small-screen">                                
+                                <span class="material-symbols-outlined">
+                                    cancel
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-0 p-0 bottom-border">
+                    <div class="custom-field-container mt-2 mb-2" style="width: 374.5px;"
+                        [class.w-auto]="IsSmallScreen()">
+                        <mat-form-field appearance="outline" class="custom-field">
+                            <input matInput type="text" placeholder="Поиск..."
+                                [(ngModel)]="pageSettings.currentFilterString"
+                                (keyup.enter)="pageSettings.ApplyFilter()"
+                                (keyup.esc)="pageSettings.ClearFilterAndRefresh()">
+                            <button matTooltip="Поиск" mat-icon-button matPrefix color="primary"
+                                (click)="pageSettings.ApplyFilter()">
+                                <mat-icon>search</mat-icon>
+                            </button>
+                            <button *ngIf="pageSettings.currentFilterString" matTooltip="Сбросить" mat-icon-button
+                                matSuffix color="primary" (click)="pageSettings.ClearFilterAndRefresh()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="potential-chat-members-cotainer-small-screen" ScrollEndTracker
+                    [pixelsToScrollBottomToEmitEvent]="220" (scrollEnd)="LoadMorePotentialChatMembers()">
+                    <div class="row m-0 p-0" *ngFor="let member of potentialChatMembers">
+                        <div class="chat-member-row-container border-bottom d-flex align-items-center"
+                            style="position:relative" (click)="SelectChatMember(member)">
+                            <div class="row m-0 p-0 w-100">
+                                <div class="col-auto d-flex align-items-center">
+                                    <div class="small-chat-member-avatar-image-container">
+                                        <img [src]="member?.avatar?.fileContent" alt="Avatar"
+                                            class="small-chat-member-avatar-image"
+                                            *ngIf="member?.avatar?.fileContent; else noImageFound">
+                                        <ng-template #noImageFound>
+                                            <img [src]="defaultImageSrc" alt="Default image"
+                                                class="small-chat-member-avatar-image">
+                                        </ng-template>
+                                    </div>
+                                </div>
+                                <div class="col chat-member-name-container">
+                                    <div class="row p-0 m-0">
+                                        <div class="col p-0 m-0 d-flex justify-content-start">
+                                            <span class="chat-member-name">
+                                                {{member?.GetDisplayName()}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="IsMemberSelected(member); else selectTemplate" class="chat-member-selected">
+                                <span class="material-symbols-outlined">
+                                    done
+                                </span>
+                            </div>
+                            <ng-template #selectTemplate>
+                                <div class="chat-member-move-arrow">
+                                    <span class="material-symbols-outlined">
+                                        arrow_forward
+                                    </span>
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div *ngIf="isChatMembersLoading" class="row m-0 p-0">
+                        <app-loading-indication class="d-flex justify-content-center" [width]="50"
+                            [height]="50"></app-loading-indication>
+                    </div>
+                </div>
+                <div class="row m-0 p-0">
+                    <div class="col p-2">
+                        <button *ngIf="HasCreateAccessTo('Chat')"
+                            [disabled]="isChatOpening || selectedPotentialChatMembers.length == 0" mat-stroked-button
+                            color="primary" class="w-100 text-center" type="submit" (click)="CreateOrOpenChat()">
+                            <span *ngIf="!isChatOpening; else loading" style="font-size: 14px">
+                                {{ newChatName
+                                || selectedPotentialChatMembers.length > 1
+                                || selectedPotentialChatMembers.length == 0
+                                ? 'Создать чат' : 'Перейти к диалогу'}}
+                            </span>
+                            <ng-template #loading>
+                                <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                            </ng-template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>

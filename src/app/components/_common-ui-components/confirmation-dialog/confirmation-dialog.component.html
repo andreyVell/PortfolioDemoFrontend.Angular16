@@ -1,0 +1,17 @@
+<h1 mat-dialog-title>{{confirmData.title}}</h1>
+<div mat-dialog-content style="max-width: 500px;">
+    {{confirmData.content}}
+    <br>
+    <span style="color: red">
+        {{confirmData.subContent}}
+    </span>
+</div>
+<div mat-dialog-actions class="d-flex justify-content-end" >
+    <div *ngIf="confirmData.buttons && confirmData.buttons.length > 0">
+
+    </div>
+    <div *ngIf="!confirmData.buttons || confirmData.buttons.length === 0">
+        <button mat-flat-button color="primary" cdkFocusInitial (click)="DefaultYesClick()">Да</button>
+        <button mat-stroked-button color="primary" (click)="DefaultNoClick()">Нет</button>        
+    </div>
+</div>

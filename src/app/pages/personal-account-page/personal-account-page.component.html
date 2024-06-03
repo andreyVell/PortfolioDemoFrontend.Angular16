@@ -1,0 +1,103 @@
+<app-navigation-header [isSarchFieldVisible]='false'>
+    <div class="workblock-background">
+        <div class="row m-0 p-0 d-flex justify-content-center">
+            <div class="col-xl-8 col-lg-10 col-md-12 col-sm-12 col-12 m-0 p-0">
+                <div class="row details-page-title-container justify-content-between">
+                    <div class="col-auto m-0 p-0 d-flex align-items-center">
+                        <button matTooltip="На предыдущую страницу" mat-icon-button color="primary"
+                            (click)="MainPageClick()">
+                            <mat-icon>arrow_back</mat-icon>
+                        </button>
+                        <span style="font-size: 24px; font-weight: 500;">
+                            Личный кабинет пользователя
+                        </span>
+                    </div>
+                </div>
+                <div class="row p-0 m-0 d-flex">
+                    <div class="col p-0 m-0">
+                        <div class="row employee-details-page-avatar-content-container">
+                            <div class="col-auto m-0 p-0 d-flex align-items-center">
+                                <div class="avatar-container">
+                                    <img [src]="employee.employeeAvatar?.fileContent" alt="Avatar" class="avatar-image"
+                                        *ngIf="employee.employeeAvatar?.fileContent; else noImageFound">
+                                    <ng-template #noImageFound>
+                                        <img [src]="defaultImageSrc" alt="Default image">
+                                    </ng-template>
+                                    <div *ngIf="HasUpdateAccessTo('Employee')" class="overlay"></div>
+                                    <button *ngIf="HasUpdateAccessTo('Employee')" class="avatar-edit-button"
+                                        mat-icon-button (click)="imageInput.click()">
+                                        <i style="color: white; font-size:30px" class="fa-regular fa-file-image"></i>
+                                    </button>
+                                    <label class="image-upload-container btn btn-bwm" style="display: none;">
+                                        <input #imageInput type="file" accept="image/*"
+                                            (change)="ProcessStudentAvatar(imageInput)">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col"
+                                [class]='IsSmallScreen()? "" : "employee-full-name-container"'>
+                                <div *ngIf="IsSmallScreen()"
+                                    class="row m-0 p-0 d-flex w-100 justify-content-center pt-2">
+                                    <div *ngIf="HasUpdateAccessTo('Employee')" class="col-auto m-0 p-0">
+                                        <button mat-flat-button [disabled]="isJobUpdating || isEmployeeUpdating.value"
+                                            color="primary" (click)="SaveEmployee()" style="min-width: 135.42px">
+                                            <mat-icon *ngIf="!isJobUpdating && !isEmployeeUpdating.value">save</mat-icon>
+                                            <span *ngIf="!isJobUpdating && !isEmployeeUpdating.value; else loading">
+                                                Сохранить
+                                            </span>
+                                            <ng-template #loading>
+                                                <app-loading-indication [width]="36"
+                                                    [height]="36"></app-loading-indication>
+                                            </ng-template>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row m-0 p-0 d-flex align-items-center"
+                                    [class]='IsSmallScreen()? "justify-content-center pt-2" : "justify-content-end h-100"'>
+                                    <span class="m-0 p-0 employee-full-name"
+                                        [style]='IsSmallScreen()? "text-align: center;" : "text-align: start; white-space: nowrap;"'>
+                                        {{employee.GetFullName()}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div *ngIf="!IsSmallScreen() && HasUpdateAccessTo('Employee')" class="col-auto m-0 p-0">
+                                <button mat-flat-button [disabled]="isJobUpdating || isEmployeeUpdating.value" color="primary"
+                                    (click)="SaveEmployee()" style="min-width: 135.42px">
+                                    <mat-icon *ngIf="!isJobUpdating && !isEmployeeUpdating.value">save</mat-icon>
+                                    <span *ngIf="!isJobUpdating && !isEmployeeUpdating.value; else loading">
+                                        Сохранить
+                                    </span>
+                                    <ng-template #loading>
+                                        <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                                    </ng-template>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row"
+                            [class]='IsSmallScreen()? "small-employee-details-page-tabs-container":"employee-details-page-tabs-container"'>
+                            <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+                                <mat-tab>
+                                    <ng-template matTabLabel>
+                                        <span class="tab-header">Персональная информация</span>
+                                    </ng-template>
+                                    <ng-template matTabContent>
+                                        <app-employee-personal-info [employee]="employee"></app-employee-personal-info>
+                                    </ng-template>
+                                </mat-tab>
+                                <mat-tab>
+                                    <ng-template matTabLabel>
+                                        <span class="tab-header">Доступ к системе</span>
+                                    </ng-template>
+                                    <ng-template matTabContent>
+                                        <app-employee-roles [employee]="employee"></app-employee-roles>
+                                    </ng-template>
+                                </mat-tab>
+                            </mat-tab-group>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</app-navigation-header>

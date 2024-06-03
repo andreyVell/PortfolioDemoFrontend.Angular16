@@ -1,0 +1,91 @@
+<div style="padding: 15px; max-width: 80vw;">
+    <div class="row m-0 p-0">
+        <div class="col m-0 p-0 d-flex align-items-center">
+            <span style="font-weight: 500; font-size: 25px;">
+                Выберите собеседника
+            </span>
+        </div>
+        <div class="col-auto m-0 p-0">
+            <button mat-icon-button color="primary" matTooltip="Закрыть" (click)="CloseForm()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0 justify-content-between">
+        <div class="col-auto d-flex justify-content-start align-items-center">
+            <span class="elements-per-page-label">Элементов на странице:&nbsp;</span>
+            <div class="custom-field-container" style="max-width: 100px;">
+                <mat-form-field appearance="outline" class="custom-field">
+                    <mat-select [(value)]="pageSettings.itemsPerPage"
+                        (selectionChange)="pageSettings.ItemsPerPageChanged()">
+                        <mat-option *ngFor="let itemsPerPageNumber of pageSettings.itemsPerPageOptions"
+                            [value]="itemsPerPageNumber">{{itemsPerPageNumber}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-auto p-0 d-flex justify-content-end align-items-center">
+            <div style="min-width: 250px;" class="d-flex justify-content-end align-items-center">
+                <span style="font-size: 16px; margin-right: 10px;">{{pageSettings.CurrentPageMin()}} -
+                    {{pageSettings.CurrentPageMax()}} из
+                    {{pageSettings.totalItems}}</span>
+                <button mat-icon-button color="primary" matTooltip="Предыдущая страница"
+                    [disabled]="!pageSettings.IsPreviousPageButtonActive()" (click)="pageSettings.PreviousPageClick()">
+                    <mat-icon>arrow_back_ios</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" matTooltip="Следующая страница"
+                    [disabled]="!pageSettings.IsNextPageButtonActive()" (click)="pageSettings.NextPageClick()">
+                    <mat-icon>arrow_forward_ios</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row m-0 p-0 d-flex align-items-center" style="margin-top: 10px!important;">
+        <div class="col">
+            <mat-form-field appearance="outline" class="custom-field">
+                <input matInput type="text" placeholder="ФИО, день рождения, должность, E-mail, номер телефона или роль"
+                    [(ngModel)]="pageSettings.currentFilterString" (keyup.enter)="pageSettings.ApplyFilter()"
+                    (keyup.esc)="pageSettings.ClearFilterAndRefresh()">
+                <button matTooltip="Поиск" mat-icon-button matPrefix color="primary"
+                    (click)="pageSettings.ApplyFilter()">
+                    <mat-icon>search</mat-icon>
+                </button>
+                <button *ngIf="pageSettings.currentFilterString" matTooltip="Сбросить" mat-icon-button matSuffix
+                    color="primary" (click)="pageSettings.ClearFilterAndRefresh()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row m-0 p-0" style="margin-top: 10px!important;">
+        <div class="potential-chat-members-cotainer">
+            <div class="row m-0 p-0" *ngFor="let member of potentialChatMembers">
+                <div class="chat-member-row-container border-bottom d-flex align-items-center" style="position:relative"
+                    (dblclick)="ChatMemberSelected(member)">
+                    <div class="row m-0 p-0 w-100">
+                        <div class="col-auto d-flex align-items-center">
+                            <div class="small-chat-member-avatar-image-container">
+                                <img [src]="member?.avatar?.fileContent" alt="Avatar"
+                                    class="small-chat-member-avatar-image"
+                                    *ngIf="member?.avatar?.fileContent; else noImageFound">
+                                <ng-template #noImageFound>
+                                    <img [src]="defaultImageSrc" alt="Default image"
+                                        class="small-chat-member-avatar-image">
+                                </ng-template>
+                            </div>
+                        </div>
+                        <div class="col chat-member-name-container">
+                            <div class="row p-0 m-0">
+                                <div class="col p-0 m-0 d-flex justify-content-start">
+                                    <span class="chat-member-name">
+                                        {{member?.GetDisplayName()}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

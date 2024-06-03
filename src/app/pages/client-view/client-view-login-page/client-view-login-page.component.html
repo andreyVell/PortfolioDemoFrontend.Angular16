@@ -1,0 +1,73 @@
+<div class="outer">
+    <div class="w-100 h-100" style="backdrop-filter: blur(20px)">
+        <div class="row m-0 p-0 h-100 d-flex justify-content-center align-items-center">
+            <div class="col-md-6 col-sm-10 col-lg-5 col-xxl-4 offset-md-0">
+                <div class="panel h-auto">
+                    <div class="panel-heading">
+                        <h1 class="pt-3 font-weigth-bold">Войти</h1>
+                        <div class="row m-0 p-0 d-flex justify-content-center align-items-center">
+                            <div class="wrapper" [class.disabled-container]="isLoging">
+                                <input type="radio" name="select" id="option-1" checked>
+                                <input type="radio" name="select" id="option-2">
+                                <label for="option-1" class="option option-1" (click)="currentClientType = 0">
+                                    <div class="dot"></div>
+                                    <span style="font-size: 19px">Физ. лицо</span>
+                                </label>
+                                <label for="option-2" class="option option-2" (click)="currentClientType = 1">
+                                    <div class="dot"></div>
+                                    <span style="font-size: 19px">Юр. лицо</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body p-3">
+                        <form [formGroup]="loginForm">
+                            <mat-form-field class="w-100" appearance="outline"
+                                [class.error]="loginForm.controls['username'].dirty && loginForm.hasError('required', 'username')">
+                                <mat-label>
+                                    <i class="fa fa-user p-2"></i>
+                                    Имя пользователя (Логин)
+                                </mat-label>
+                                <input matInput type="text" formControlName="username">
+                                <mat-hint>
+                                    <small
+                                        *ngIf="loginForm.controls['username'].dirty && loginForm.hasError('required', 'username')"
+                                        class="text-danger">
+                                        *Необходимо ввести имя пользователя
+                                    </small>
+                                </mat-hint>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-100" appearance="outline"
+                                [class.error]="loginForm.controls['password'].dirty && loginForm.hasError('required', 'password')">
+                                <mat-label>
+                                    <i class="fa fa-lock p-2"></i>
+                                    Пароль
+                                </mat-label>
+                                <input matInput formControlName="password" [type]="inputPasswordType">
+                                <i matSuffix [class]="iconPasswordClass" (click)="HideShowPass()"
+                                    style="width: 37px"></i>
+                                <mat-hint>
+                                    <small
+                                        *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required', 'password')"
+                                        class="text-danger">
+                                        *Необходимо ввести пароль
+                                    </small>
+                                </mat-hint>
+                            </mat-form-field>
+                            <button [disabled]="isLoging" mat-flat-button color="primary" class="mt-4 w-100"
+                                type="submit" (click)="onSubmitLoginForm()">
+                                <span *ngIf="!isLoging; else loading" class="p-0">
+                                    Войти
+                                </span>
+                                <ng-template #loading>
+                                    <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                                </ng-template>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

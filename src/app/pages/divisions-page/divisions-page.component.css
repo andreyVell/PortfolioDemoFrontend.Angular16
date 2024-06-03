@@ -1,0 +1,65 @@
+.division-page-entity-table-container {
+  overflow-y: auto;
+  overflow-x: auto;
+  align-content: flex-start;
+  max-height: calc(100svh - 56px - 20px - 72px - 36px - 48px - 8px);
+}
+
+
+.division-page-entity-nested-list-container {
+  overflow-y: auto;
+  overflow-x: auto;
+  align-content: flex-start;
+  max-height: calc(100svh - 56px - 20px - 72px - 40px - 36px - 5px - 20px);
+}
+
+.small-division-page-entity-table-container {
+  overflow-y: auto;
+  overflow-x: auto;
+  align-content: flex-start;
+  max-height: calc(100svh - 56px - 20px - 20px - 100px - 88px - 8px);
+}
+
+
+.small-division-page-entity-nested-list-container {
+  overflow-y: auto;
+  overflow-x: auto;
+  align-content: flex-start;
+  max-height: calc(100svh - 56px - 20px - 20px - 100px - 36px - 5px - 20px);
+}
+
+
+.hierarchy-tree-invisible {
+  display: none;
+}
+
+.hierarchy-tree ul,
+.hierarchy-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+/* This padding sets alignment of the nested nodes. */
+.hierarchy-tree .mat-nested-tree-node div[role=group] {
+  padding-left: 48px;
+}
+
+.mat-tree-node {
+  padding-left: 0px !important;
+}
+
+.mat-tree-node-without-childs {
+  padding-left: 48px !important;
+}
+
+.mat-nested-tree-node .hovered {
+  background: #ececec;
+  background-clip: content-box;
+  cursor: pointer;
+}
+
+.mat-tree-node .hovered {
+  background: #ececec;
+  cursor: pointer;
+}

@@ -1,0 +1,149 @@
+<div [class]='IsSmallScreen()? "small-project-details-main-info-container" : "project-details-main-info-container"'>
+    <div *ngIf="HasUpdateAccessTo('Project')" class="row m-0 p-0">
+        <div class="col-auto m-0 p-0">
+            <button [disabled]="isProjectUpdating" mat-stroked-button color="primary" (click)="SaveProject()">
+                <mat-icon *ngIf="!isProjectUpdating;">save</mat-icon>
+                <span *ngIf="!isProjectUpdating; else loading">
+                    Сохранить
+                </span>
+                <ng-template #loading>
+                    <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                </ng-template>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0 mt-3" [class.disabled-container]="!HasUpdateAccessTo('Project')">
+        <div class="col-auto mt-2">
+            <div style="width: 120px;">
+                <span class="p-0" style="font-size: 18px; margin-top: 10px!important;">
+                    Название:
+                </span>
+            </div>
+        </div>
+        <div class="col">
+            <span class="p-0" style="font-size: 18px">
+                <mat-form-field appearance="outline" class="w-100" style="max-width: 700px;">
+                    <textarea matInput type="text" [(ngModel)]="project.name" rows="3" #textAreaName
+                        maxlength="5000"></textarea>
+                    <mat-hint align="end">
+                        {{textAreaName.value.length}}/1000
+                    </mat-hint>
+                </mat-form-field>
+            </span>
+        </div>
+    </div>
+    <div class="row m-0 p-0" [class.mt-3]="!IsSmallScreen()" [class.disabled-container]="!HasUpdateAccessTo('Project')">
+        <div class="col-auto mt-2">
+            <div style="width: 120px;">
+                <span class="p-0" style="font-size: 18px; margin-top: 10px!important;">
+                    Описание:
+                </span>
+            </div>
+        </div>
+        <div class="col">
+            <span class="p-0" style="font-size: 18px">
+                <mat-form-field appearance="outline" class="w-100" style="max-width: 700px;">
+                    <textarea matInput type="text" [(ngModel)]="project.description" rows="5" #textAreaDescription
+                        maxlength="5000"></textarea>
+                    <mat-hint align="end">
+                        {{textAreaDescription.value.length}}/5000
+                    </mat-hint>
+                </mat-form-field>
+            </span>
+        </div>
+    </div>
+    <div class="row m-0 p-0" [class]='IsSmallScreen()? "" : "mt-3"'
+        [class.disabled-container]="!HasUpdateAccessTo('Project')">
+        <div class="col-auto" style="margin-top: 17px">
+            <div style="width: 120px;">
+                <span class="p-0" style="font-size: 18px; margin-top: 10px!important;">
+                    Менеджер:
+                </span>
+            </div>
+        </div>
+        <div class="col">
+            <span class="p-0" style="font-size: 18px">
+                <mat-form-field appearance="outline" class="w-100" style="max-width: 700px;">
+                    <input readonly="true" matInput type="text" [value]="project.manager?.GetFullNameAndContacts()">
+                    <button [disabled]="!HasUpdateAccessTo('Project') || !HasUpdateAccessTo('Employee')"
+                        matTooltip="Изменить менеджера" mat-icon-button matSuffix color="primary"
+                        (click)="SelectManager()">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </mat-form-field>
+            </span>
+        </div>
+    </div>
+    <div class="row m-0 p-0" [class]='IsSmallScreen()? "" : "mt-3"'>
+        <div class="col-auto" style="margin-top: 9px">
+            <div style="width: 120px;">
+                <span class="p-0" style="font-size: 18px;">
+                    Заказчик:
+                </span>
+            </div>
+        </div>
+        <div *ngIf="IsSmallScreen(); else bigScreenClientsTemplate" class="row m-0 p-0">
+            <div class="col">
+                <mat-chip-listbox>
+                    <button *ngIf="HasReadAccessTo('Client') && HasCreateAccessTo('Client')" matRipple
+                        matTooltip="Добавить заказчика" class="mat-chip-add-button" (click)="AddClient()">
+                        <mat-icon color="primary">add</mat-icon>
+                    </button>
+                    <mat-chip *ngFor="let client of project.clients">
+                        <button *ngIf="HasDeleteAccessTo('Client')" matTooltip="Удалить заказчика" matChipRemove
+                            (click)="DeleteClient(client)">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                        <span style="font-size: 16px;">{{IsSmallScreen() ? client.GetClientShortName() :
+                            client.GetClientFullName()}}</span>
+                    </mat-chip>
+                </mat-chip-listbox>
+            </div>
+        </div>
+        <ng-template #bigScreenClientsTemplate>
+            <div class="col-5">
+                <mat-chip-listbox>
+                    <button *ngIf="HasReadAccessTo('Client') && HasCreateAccessTo('Client')" matRipple
+                        matTooltip="Добавить заказчика" class="mat-chip-add-button" (click)="AddClient()">
+                        <mat-icon color="primary">add</mat-icon>
+                    </button>
+                    <mat-chip *ngFor="let client of project.clients">
+                        <button *ngIf="HasDeleteAccessTo('Client')" matTooltip="Удалить заказчика" matChipRemove
+                            (click)="DeleteClient(client)">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                        <span style="font-size: 16px;">{{IsSmallScreen() ? client.GetClientShortName() :
+                            client.GetClientFullName()}}</span>
+                    </mat-chip>
+                </mat-chip-listbox>
+            </div>
+        </ng-template>
+    </div>
+    <div class="row m-0 p-0" [class]='IsSmallScreen()? "" : "mt-3"'>
+        <div class="col-auto" style="margin-top: 9px">
+            <div style="width: 120px;">
+                <span class="p-0" style="font-size: 18px;">
+                    Исполнитель:
+                </span>
+            </div>
+        </div>
+        <div *ngIf="IsSmallScreen(); else bigScreenContractorTemplate" class="row m-0 p-0">
+            <div class="col">
+                <mat-chip-listbox>
+                    <mat-chip *ngFor="let contractor of project.contractors">
+                        <span style="font-size: 16px;">{{contractor.name}}</span>
+                    </mat-chip>
+                </mat-chip-listbox>
+            </div>
+        </div>
+        <ng-template #bigScreenContractorTemplate>
+            <div class="col-5">
+                <mat-chip-listbox>
+                    <mat-chip *ngFor="let contractor of project.contractors">
+                        <span style="font-size: 16px;">{{contractor.name}}</span>
+                    </mat-chip>
+                </mat-chip-listbox>
+            </div>
+        </ng-template>
+    </div>
+</div>

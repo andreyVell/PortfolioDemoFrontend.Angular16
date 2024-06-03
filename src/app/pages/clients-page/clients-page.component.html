@@ -1,0 +1,184 @@
+<app-navigation-header (searchFieldContentChanged)="pageSettings.OnFilterStringChanged($event)"
+    (searchFieldEnterPressed)="pageSettings.ApplyFilter()" [isSarchFieldVisible]='true'
+    (searchFieldEscPressed)="pageSettings.ClearFilterAndRefresh()" searchFieldPlaceHolder="Поиск клиентов...">
+    <div class="workblock-background">
+        <div class="row p-0 m-0 d-flex justify-content-center">
+            <div class="col-xxl-7 col-xl-8 col-lg-9 col-md-12 col-sm-12 col-12 m-0 p-0">
+                <div class="row m-0 p-0">
+                    <div class="col page-without-menu-main-content-container" [class.small-page-without-menu-main-content-container]="IsSmallScreen()">
+                        <div class="row p-0 m-0 d-flex w-100 justify-content-between">
+                            <div class="col-auto" [class]="IsSmallScreen() ? 'p-0 m-0 d-flex align-items-center':''">
+                                <span style="font-size: 24px; font-weight: 500;">Клиенты</span>
+                            </div>
+                            <div class="col-auto" [class]="IsSmallScreen() ? 'p-0 m-0':''">
+                                <div class="row p-0 m-0 w-100 d-flex justify-content-center">
+                                    <mat-chip-listbox class="justify-content-center" [class]="IsSmallScreen() ? 'p-0':''" [(ngModel)]="displayMode"
+                                        (ngModelChange)="Refresh()">
+                                        <div class="w-100 d-flex justify-content-center m-0">
+                                            <mat-chip-option [style]="HasReadAccessTo('Person')? '':'display: none;'" [value]="0">Физ. лица</mat-chip-option>
+                                            <mat-chip-option [style]="HasReadAccessTo('Organization')? '':'display: none;'" [value]="1">Юр. лица</mat-chip-option>
+                                        </div>
+                                    </mat-chip-listbox>
+                                </div>
+                            </div>
+                            <div class="col-auto" [class]="IsSmallScreen() ? 'p-0 m-0':''">
+                                <button
+                                    *ngIf="(HasCreateAccessTo('Person') && displayMode==0) || (HasCreateAccessTo('Organization') && displayMode==1)"
+                                    mat-flat-button color="primary" (click)="CreateClient()">
+                                    <div class="d-flex align-items-center">
+                                        <span style="font-size: 22px" class="material-symbols-outlined pe-2">
+                                            person_add
+                                        </span>
+                                        <span>Добавить клиента</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="row p-0 m-0 mt-2 justify-content-between">
+                                <!-- page controling  -->
+                                <div class="col-auto d-flex justify-content-start align-items-center">
+                                    <span class="elements-per-page-label">Элементов на странице:&nbsp;</span>
+                                    <div class="custom-field-container" style="max-width: 100px;">
+                                        <mat-form-field appearance="outline" class="custom-field">
+                                            <mat-select [(value)]="pageSettings.itemsPerPage"
+                                                (selectionChange)="pageSettings.ItemsPerPageChanged()">
+                                                <mat-option
+                                                    *ngFor="let itemsPerPageNumber of pageSettings.itemsPerPageOptions"
+                                                    [value]="itemsPerPageNumber">{{itemsPerPageNumber}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-auto p-0 d-flex justify-content-end align-items-center">
+                                    <div style="min-width: 250px;"
+                                        class="d-flex justify-content-end align-items-center">
+                                        <span
+                                            style="font-size: 16px; margin-right: 10px;">{{pageSettings.CurrentPageMin()}}
+                                            -
+                                            {{pageSettings.CurrentPageMax()}} из
+                                            {{pageSettings.totalItems}}</span>
+                                        <button mat-icon-button color="primary" matTooltip="Предыдущая страница"
+                                            [disabled]="!pageSettings.IsPreviousPageButtonActive()"
+                                            (click)="pageSettings.PreviousPageClick()">
+                                            <mat-icon>arrow_back_ios</mat-icon>
+                                        </button>
+                                        <button mat-icon-button color="primary" matTooltip="Следующая страница"
+                                            [disabled]="!pageSettings.IsNextPageButtonActive()"
+                                            (click)="pageSettings.NextPageClick()">
+                                            <mat-icon>arrow_forward_ios</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row p-0 m-0">
+                                <!-- table -->
+                                <div class="client-page-entity-table-container" [class.small-client-page-entity-table-container]="IsSmallScreen()">
+                                    <table *ngIf="displayMode === 0" class="table table-hover m-0 table-sticky-header"
+                                        style="max-width: 50000px;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 48px;" class="text-left"></th>
+                                                <th style="width: 400px;" class="text-left">Клиент</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let person of persons"
+                                                (dblclick)="OpenClientDetailsPage(person)">
+                                                <td class="p-0">
+                                                    <button mat-icon-button [matMenuTriggerFor]="menu"
+                                                        matTooltip="Действия"
+                                                        aria-label="Example icon-button with a menu">
+                                                        <mat-icon>more_vert</mat-icon>
+                                                    </button>
+                                                    <mat-menu #menu="matMenu">
+                                                        <button mat-menu-item (click)="OpenClientDetailsPage(person)">
+                                                            <mat-icon>edit</mat-icon>
+                                                            <span>Редактировать</span>
+                                                        </button>
+                                                        <mat-divider *ngIf="HasDeleteAccessTo('Person')"></mat-divider>
+                                                        <button *ngIf="HasDeleteAccessTo('Person')" mat-menu-item
+                                                            (click)="DeleteClient(person)">
+                                                            <mat-icon style="color: red;">delete_outline</mat-icon>
+                                                            <span style="color: red;">Удалить</span>
+                                                        </button>
+                                                    </mat-menu>
+                                                </td>
+                                                <td>
+                                                    <div class="row m-0 p-0">
+                                                        <span class="p-0" style="font-size: 16px;">
+                                                            {{person.GetLastNameAndInitials()}}
+                                                        </span>
+                                                    </div>
+                                                    <div class="row m-0 p-0">
+                                                        <span class="p-0" style="font-size: 14px; color: gray;">
+                                                            {{person.contactEmail + " " + person.contactPhone}}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table *ngIf="displayMode === 1" class="table table-hover m-0 table-sticky-header"
+                                        style="max-width: 50000px;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 48px;" class="text-left"></th>
+                                                <th style="width: 400px;" class="text-left">Клиент</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let organization of organizations"
+                                                (dblclick)="OpenClientDetailsPage(organization)">
+                                                <td class="p-0">
+                                                    <button mat-icon-button [matMenuTriggerFor]="menu"
+                                                        matTooltip="Действия"
+                                                        aria-label="Example icon-button with a menu">
+                                                        <mat-icon>more_vert</mat-icon>
+                                                    </button>
+                                                    <mat-menu #menu="matMenu">
+                                                        <button mat-menu-item
+                                                            (click)="OpenClientDetailsPage(organization)">
+                                                            <mat-icon>edit</mat-icon>
+                                                            <span>Редактировать</span>
+                                                        </button>
+                                                        <mat-divider
+                                                            *ngIf="HasDeleteAccessTo('Organization')"></mat-divider>
+                                                        <button *ngIf="HasDeleteAccessTo('Organization')" mat-menu-item
+                                                            (click)="DeleteClient(organization)">
+                                                            <mat-icon style="color: red;">delete_outline</mat-icon>
+                                                            <span style="color: red;">Удалить</span>
+                                                        </button>
+                                                    </mat-menu>
+                                                </td>
+                                                <td>
+                                                    <div class="row m-0 p-0">
+                                                        <span class="p-0" style="font-size: 16px;">
+                                                            {{organization.name + (!!organization.inn ? ' (ИНН: ' +
+                                                            organization.inn + ')' : '')}}
+                                                        </span>
+                                                    </div>
+                                                    <div class="row m-0 p-0">
+                                                        <span class="p-0" style="font-size: 14px; color: gray;">
+                                                            {{organization.contactEmail + " " +
+                                                            organization.contactPhone}}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</app-navigation-header>

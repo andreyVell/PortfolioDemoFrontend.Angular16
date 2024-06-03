@@ -1,0 +1,90 @@
+<div class="project-details-main-info-container" [class.small-project-details-main-info-container]="IsSmallScreen()">    
+    <div class="row m-0 p-0 mt-3">
+        <div class="col-auto mt-2">
+            <div style="width: 120px;">
+                <span class="p-0" style="font-size: 18px; margin-top: 10px!important;">
+                    Название:
+                </span>
+            </div>  
+        </div>
+        <div class="col">
+            <span class="p-0" style="font-size: 18px">
+                <mat-form-field appearance="outline" class="w-100" style="max-width: 650px;">
+                    <textarea readonly="true" matInput type="text" [(ngModel)]="project.name" rows="3" #textAreaName
+                        maxlength="5000"></textarea>
+                    <mat-hint align="end">
+                        {{textAreaName.value.length}}/1000
+                    </mat-hint>
+                </mat-form-field>
+            </span>
+        </div>
+    </div>
+    <div class="row m-0 p-0 mt-3">
+        <div class="col-auto mt-2">
+            <div style="width: 120px;">
+                <span class="p-0" style="font-size: 18px; margin-top: 10px!important;">
+                    Описание:
+                </span>
+            </div>  
+        </div>
+        <div class="col">
+            <span class="p-0" style="font-size: 18px">
+                <mat-form-field appearance="outline" class="w-100" style="max-width: 650px;">
+                    <textarea readonly="true" matInput type="text" [(ngModel)]="project.description" rows="5" #textAreaDescription
+                        maxlength="5000"></textarea>
+                    <mat-hint align="end">
+                        {{textAreaDescription.value.length}}/5000
+                    </mat-hint>
+                </mat-form-field>
+            </span>
+        </div>
+    </div>
+    <div class="row m-0 p-0 mt-3">
+        <div class="col-auto" style="margin-top: 17px">
+            <div style="width: 120px;">
+                <span class="p-0" style="font-size: 18px; margin-top: 10px!important;">
+                    Ваш менеджер:
+                </span>
+            </div>            
+        </div>
+        <div class="col-5">
+            <span class="p-0" style="font-size: 18px">
+                <mat-form-field appearance="outline" class="w-100"> 
+                    <input readonly="true" matInput type="text" [value]="project.manager?.GetFullNameAndContacts()">                    
+                </mat-form-field>
+            </span>
+        </div>
+    </div>
+    <div class="row m-0 p-0 mt-3">
+        <div class="col-auto" style="margin-top: 9px">
+            <div style="width: 120px;">
+                <span class="p-0" style="font-size: 18px;">
+                    Заказчик:
+                </span>
+            </div>            
+        </div>
+        <div class="col-5">
+            <mat-chip-listbox> 
+                <mat-chip *ngFor="let client of project.clients">
+                    <span style="font-size: 16px;">{{client.GetClientFullName()}}</span>
+                </mat-chip>
+            </mat-chip-listbox>
+        </div>
+    </div>
+    <div class="row m-0 p-0 mt-3">
+        <div class="col-auto" style="margin-top: 9px">
+            <div style="width: 120px;">
+                <span class="p-0" style="font-size: 18px;">
+                    Исполнитель:
+                </span>
+            </div>            
+        </div>
+        <div class="col-5">
+            <mat-chip-listbox>  
+                <mat-chip *ngFor="let contractor of project.contractors">                    
+                    <span style="font-size: 16px;">{{contractor.name}}</span>
+                </mat-chip>
+            </mat-chip-listbox>
+        </div>
+    </div>
+</div>

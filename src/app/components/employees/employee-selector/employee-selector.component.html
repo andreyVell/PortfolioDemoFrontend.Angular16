@@ -1,0 +1,125 @@
+<div style="padding: 15px; width: 80vw; max-width: 80vw;">
+    <div class="row m-0 p-0">
+        <div class="col m-0 p-0 d-flex align-items-center">
+            <span style="font-weight: 500; font-size: 25px;">
+                Выберите сотрудника
+            </span>
+        </div>
+        <div class="col-auto m-0 p-0">
+            <button mat-icon-button color="primary" matTooltip="Закрыть" (click)="CloseForm()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0 justify-content-between">
+        <div class="col-auto d-flex justify-content-start align-items-center">
+            <span class="elements-per-page-label">Элементов на странице:&nbsp;</span>
+            <div class="custom-field-container" style="max-width: 100px;">
+                <mat-form-field appearance="outline" class="custom-field">
+                    <mat-select [(value)]="pageSettings.itemsPerPage"
+                        (selectionChange)="pageSettings.ItemsPerPageChanged()">
+                        <mat-option *ngFor="let itemsPerPageNumber of pageSettings.itemsPerPageOptions"
+                            [value]="itemsPerPageNumber">{{itemsPerPageNumber}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-auto p-0 d-flex justify-content-end align-items-center">
+            <div style="min-width: 250px;" class="d-flex justify-content-end align-items-center">
+                <span style="font-size: 16px; margin-right: 10px;">{{pageSettings.CurrentPageMin()}} -
+                    {{pageSettings.CurrentPageMax()}} из
+                    {{pageSettings.totalItems}}</span>
+                <button mat-icon-button color="primary" matTooltip="Предыдущая страница" [disabled]="!pageSettings.IsPreviousPageButtonActive()"
+                    (click)="pageSettings.PreviousPageClick()">
+                    <mat-icon>arrow_back_ios</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" matTooltip="Следующая страница" [disabled]="!pageSettings.IsNextPageButtonActive()"
+                    (click)="pageSettings.NextPageClick()">
+                    <mat-icon>arrow_forward_ios</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row m-0 p-0 d-flex align-items-center" style="margin-top: 10px!important;">        
+        <div class="col">
+            <mat-form-field appearance="outline" class="w-100 remove-form-field-subscription">
+                <mat-label>
+                    Поиск
+                </mat-label>
+                <input matInput (keyup.enter)="pageSettings.ApplyFilter()"
+                    [(ngModel)]="pageSettings.currentFilterString" placeholder="ФИО, день рождения, должность, E-mail, номер телефона или роль">
+            </mat-form-field>
+        </div>
+        <div class="col-auto p-0 m-0">
+            <button mat-icon-button color="primary" matTooltip="Поиск" (click)="pageSettings.ApplyFilter()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </div>
+        <div *ngIf="HasCreateAccessTo('Employee')" class="col-auto">
+            <button mat-icon-button color="primary" matTooltip="Добавить сотрудника" (click)="CreateEmployee()">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0" style="margin-top: 10px!important;">
+        <div class="dialog-entity-selector-table-container">            
+            <table class="table table-hover m-0 table-sticky-header" style="max-width: 50000px;">
+                <thead>
+                    <tr>                        
+                        <!--Имя сотрудника-->
+                        <th style="min-width: 250px;" class="text-left">Имя сотрудника</th>
+                        <!--Место работы-->
+                        <th style="min-width: 250px;" class="text-left">Место работы</th>
+                        <!--Телефон-->
+                        <th style="min-width: 150px;" class="text-left">Телефон</th>
+                        <!--Почта-->
+                        <th style="min-width: 250px;" class="text-left">Почта</th>
+                        <!--Роль-->
+                        <th style="min-width: 150px;" class="text-left">Роли</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let employee of employees" (dblclick)="EmployeeSelected(employee)">                        
+                        <td>
+                            <div class="row m-0 p-0">
+                                <span class="p-0" style="font-size: 16px;">
+                                    {{employee.GetLastNameAndInitials()}}
+                                </span>
+                            </div>
+                            <div class="row m-0 p-0">
+                                <span class="p-0" style="font-size: 14px; color: gray;">
+                                    {{employee.credentials?.login ?? ""}}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row m-0 p-0">
+                                <span class="p-0" style="font-size: 16px;">
+                                    {{employee.lastJob?.positionName}}
+                                </span>
+                            </div>
+                            <div class="row m-0 p-0">
+                                <span class="p-0" style="font-size: 14px; color: gray;">
+                                    {{employee.lastJob?.divisionName}}
+                                </span>
+                            </div>
+                        </td>
+                        <td>{{employee.mobilePhoneNumber}}</td>
+                        <td>{{employee.email}}</td>
+                        <td>
+                            <mat-chip-listbox>                                            
+                                <mat-chip *ngFor="let role of employee.roles"
+                                    [class.mat-chip-primary-style]="role.isSystemAdministrator">                                                
+                                    <span [class.mat-chip-primary-font-style]="role.isSystemAdministrator"
+                                        style="font-size: 16px;">{{role.name}}</span>
+                                </mat-chip>
+                            </mat-chip-listbox>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

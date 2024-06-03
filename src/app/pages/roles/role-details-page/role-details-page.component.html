@@ -1,0 +1,113 @@
+<app-navigation-header [isSarchFieldVisible]='false'>
+    <div class="workblock-background">
+        <div class="row m-0 p-0 d-flex justify-content-center">
+            <div class="col-xxl-7 col-xl-8 col-lg-9 col-md-12 col-sm-12 col-12 m-0 p-0">
+                <div class="row details-page-title-container justify-content-between flex-nowrap">
+                    <div class="col m-0 p-0 d-flex align-items-center">
+                        <button mat-icon-button color="primary" matTooltip="Назад" (click)="BackPageClick()">
+                            <mat-icon>arrow_back</mat-icon>
+                        </button>
+                        <span style="font-size: 24px; font-weight: 500;">
+                            Роль: {{detailsPageTitle}}
+                        </span>
+                    </div>
+                    <div *ngIf="HasUpdateAccessTo('AvetonRole')" class="col-auto d-flex align-items-center">                        
+                        <button [disabled]="isRoleUpdating" mat-flat-button color="primary" (click)="SaveRole()">
+                            <mat-icon *ngIf="!isRoleUpdating" [class.m-0]="IsSmallScreen()">save</mat-icon>                            
+                            <span *ngIf="!isRoleUpdating; else loading">
+                                <div *ngIf="!IsSmallScreen()">Сохранить</div>
+                            </span>
+                            <ng-template #loading>
+                                <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                            </ng-template>
+                        </button>
+                    </div>
+                </div>
+                <div class="row p-0 m-0 d-flex">
+                    <div class="col"
+                        [class]='IsSmallScreen()? "small-details-page-main-content-container" : "details-page-main-content-container"'>
+                        <div class="row p-0 m-0">
+                            <mat-form-field style="margin-top: 10px;" appearance="outline">
+                                <mat-label>
+                                    Название
+                                </mat-label>
+                                <input matInput [disabled]="!HasUpdateAccessTo('AvetonRole')" type="text"
+                                    [(ngModel)]="role.name">
+                            </mat-form-field>
+                        </div>
+                        <div class="row p-0 m-0">
+                            <mat-slide-toggle [disabled]="!HasUpdateAccessTo('AvetonRole')" color="primary"
+                                [(ngModel)]="role.isDefault">
+                                <span style="font-size: 16px">По умолчанию</span>
+                            </mat-slide-toggle>
+                        </div>
+                        <div class="row p-0 m-0">
+                            <div style="margin-top: 10px;">
+                                <mat-slide-toggle [disabled]="!HasUpdateAccessTo('AvetonRole')" color="primary"
+                                    [(ngModel)]="role.isSystemAdministrator">
+                                    <span style="font-size: 16px">Полный доступ</span>
+                                </mat-slide-toggle>
+                            </div>
+                        </div>
+
+                        <div class="row p-0 m-0"
+                            [class.disabled-container]="role.isSystemAdministrator || !HasUpdateAccessTo('AvetonRole')">
+                            <div style="margin-top: 35px;">
+                                <span style="font-size: 24px; font-weight: 500;">Управление доступом:</span>
+                            </div>
+                        </div>
+                        <div class="row p-0 m-0"
+                            [class]='IsSmallScreen()? "small-accesses-container":"accesses-container"'
+                            [class.disabled-container]="role.isSystemAdministrator || !HasUpdateAccessTo('AvetonRole')">
+                            <table class="table m-0 table-sticky-header" style="max-width: 50000px;">
+                                <thead>
+                                    <tr>
+                                        <th style="min-width: 250px!important;" class="text-left"></th>
+                                        <th style="width: 100px;" class="text-center">Создать</th>
+                                        <th style="width: 100px;" class="text-center">Просмотр</th>
+                                        <th style="width: 100px;" class="text-center">Изменить</th>
+                                        <th style="width: 100px;" class="text-center">Удалить</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let name of displayNames">
+                                        <td class="td-text-vertical-center">
+                                            <div class="text-vertical-center">
+                                                <mat-icon *ngIf="name.isPrevObjectIsParent"
+                                                    style="margin-left: 20px !important;">subdirectory_arrow_right</mat-icon>
+                                                <span [class.parent-role-name]="!name.isPrevObjectIsParent"
+                                                    [class.child-role-name]="name.isPrevObjectIsParent">
+                                                    {{name.displayName}}
+                                                </span>
+                                                <button *ngIf="name.toolTip" class="info-button"
+                                                    [matTooltip]="name.toolTip">
+                                                    <mat-icon>info_outline</mat-icon>
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td class="text-center" *ngFor="let access of accesses[name.entityName]">
+                                            <mat-checkbox color="primary" [(ngModel)]="access.isAllowed"></mat-checkbox>
+                                        </td>
+                                        <td class="text-center" *ngIf="!accesses[name.entityName]">
+                                            <mat-checkbox color="primary" disabled="true"></mat-checkbox>
+                                        </td>
+                                        <td class="text-center" *ngIf="!accesses[name.entityName]">
+                                            <mat-checkbox color="primary" disabled="true"></mat-checkbox>
+                                        </td>
+                                        <td class="text-center" *ngIf="!accesses[name.entityName]">
+                                            <mat-checkbox color="primary" disabled="true"></mat-checkbox>
+                                        </td>
+                                        <td class="text-center" *ngIf="!accesses[name.entityName]">
+                                            <mat-checkbox color="primary" disabled="true"></mat-checkbox>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</app-navigation-header>

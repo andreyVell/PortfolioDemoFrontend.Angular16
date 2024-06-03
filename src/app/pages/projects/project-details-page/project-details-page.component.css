@@ -1,0 +1,13 @@
+.project-name-title{
+    line-height: 37px;
+    padding: 0px!important;    
+    font-size: 30px; 
+    font-weight: 500;     
+    -webkit-line-clamp: 1; /* Число отображаемых строк */
+    display: -webkit-box; /* Включаем флексбоксы */
+    -webkit-box-orient: vertical; /* Вертикальная ориентация */
+    overflow: hidden; /* Обрезаем всё за пределами блока */    
+    /* text-overflow: clip; */
+    max-height: 37px;
+    width: auto;
+}

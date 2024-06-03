@@ -1,0 +1,108 @@
+<header>
+    <mat-toolbar color="primary" style="max-height: 56px;" class="p-0">
+        <div class="row d-flex w-100 justify-content-between p-0 m-0">
+            <div class="col-auto d-flex justify-content-start p-0">
+                <button *ngIf="!IsSmallScreen(); else toggleMenuButtonSmallScreen" mat-icon-button matTooltip="Меню"
+                    (click)="drawer.toggle()">
+                    <mat-icon style="font-size: 24px;">menu</mat-icon>
+                </button>
+                <ng-template #toggleMenuButtonSmallScreen>
+                    <button mat-icon-button matTooltip="Меню" (click)="drawer.toggle()"
+                        [avetonBadge]="chatService.GetCountOfUnviewedChats()" [isColorReverse]="true">
+                        <mat-icon style="font-size: 24px;">menu</mat-icon>
+                    </button>
+                </ng-template>
+                <div *ngIf="!IsSmallScreen()" class="d-flex align-items-center p-0">
+                    <img class="aveton-main-logo-img" src="assets/images/AVETON_64.png" alt="">
+                    <span class="aveton-main-logo-label">аветон</span>
+                </div>
+            </div>
+            <div *ngIf="isSarchFieldVisible"
+                class="col-xl-5 col-lg-6 col-md-6 col-sm-6 col d-flex justify-content-center align-items-center">
+                <mat-icon class="header-search-bar-prefix-icon">search</mat-icon>
+                <input class="header-search-bar" (keyup.enter)="SearchFieldPressEnter()"
+                    (keyup.esc)="SearchFieldPressEsc(); searchBarText.value = ''" #searchBarText
+                    (input)="onSearchFieldContentChanged(searchBarText.value)" [placeholder]="searchFieldPlaceHolder">
+            </div>
+            <div class="col-auto d-flex justify-content-end align-items-center p-0" [matMenuTriggerFor]="profileMenu"
+                style="cursor: pointer;">
+                <span *ngIf="!IsSmallScreen()" class="current-user-name">
+                    {{currentUserDataService.currentUserEmployeeShortInfo?.GetFirstNameAndLastNameInitial() ?? ""}}
+                </span>
+                <div class="small-avatar-image-container">
+                    <img [src]="currentUserDataService.currentUserEmployeeShortInfo?.employeeSmallAvatar?.fileContent"
+                        alt="Avatar" class="small-avatar-image"
+                        *ngIf="currentUserDataService.currentUserEmployeeShortInfo?.employeeSmallAvatar?.fileContent; else noImageFound">
+                    <ng-template #noImageFound>
+                        <img [src]="defaultImageSrc" alt="Default image" class="small-avatar-image">
+                    </ng-template>
+                </div>
+                <mat-menu #profileMenu="matMenu">
+                    <mat-nav-list class="p-0">
+                        <div class="row m-0 p-0 mb-2">
+                            <div class="col-auto pe-0">
+                                <div class="small-avatar-image-container">
+                                    <img [src]="currentUserDataService.currentUserEmployeeShortInfo?.employeeSmallAvatar?.fileContent"
+                                        alt="Avatar" class="small-avatar-image"
+                                        *ngIf="currentUserDataService.currentUserEmployeeShortInfo?.employeeSmallAvatar?.fileContent; else noImageFound">
+                                    <ng-template #noImageFound>
+                                        <img [src]="defaultImageSrc" alt="Default image" class="small-avatar-image">
+                                    </ng-template>
+                                </div>
+                            </div>
+                            <div class="col ps-0 current-user-fullname-container">
+                                <div class="row m-0 p-0">
+                                    <span class="current-user-fullname">
+                                        {{currentUserDataService.currentUserEmployeeShortInfo?.GetFirstNameAndLastName()
+                                        ??
+                                        ""}}
+                                    </span>
+                                </div>
+                                <div class="row m-0 p-0">
+                                    <span class="current-user-login">
+                                        {{currentUserDataService.currentUserEmployeeShortInfo?.credentials?.login ??
+                                        ""}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <mat-list-item routerLink="/PersonalAccount" routerLinkActive="menu-item-active"
+                            [routerLinkActiveOptions]="{exact: true}" matTooltip="Мой профиль"
+                            matTooltipPosition="right">
+                            <a class="d-flex menu-item" routerLink="/PersonalAccount"
+                                routerLinkActive="menu-item-active-a" [routerLinkActiveOptions]="{exact: true}">
+                                <span class="material-symbols-outlined">
+                                    person_outline
+                                </span>
+                                <div style="padding-left: 10px; color: inherit;">Мой профиль</div>
+                            </a>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <button mat-menu-item (click)="signOutClick()">
+                            <mat-icon style="color: red;">exit_to_app</mat-icon>
+                            <span style="color: red;">Выйти из аккаунта</span>
+                        </button>
+                    </mat-nav-list>
+                </mat-menu>
+            </div>
+        </div>
+    </mat-toolbar>
+</header>
+<mat-drawer-container autosize>
+    <mat-drawer #drawer opened="false" mode="over" position="start">
+        <app-navigation-menu [IsExpanded]='true'>
+
+        </app-navigation-menu>
+    </mat-drawer>
+    <mat-drawer-content>
+        <div class="sidenav-content">
+            <app-navigation-menu *ngIf="!IsSmallScreen()" [IsExpanded]='false'>
+
+            </app-navigation-menu>
+            <ng-content>
+
+            </ng-content>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>

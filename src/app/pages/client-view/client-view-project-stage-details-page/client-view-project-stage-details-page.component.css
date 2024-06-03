@@ -1,0 +1,81 @@
+.project-stage-name-title {
+    line-height: 37px;
+    padding: 0px !important;
+    font-size: 30px;
+    font-weight: 500;
+    -webkit-line-clamp: 1;
+    /* Число отображаемых строк */
+    display: -webkit-box;
+    /* Включаем флексбоксы */
+    -webkit-box-orient: vertical;
+    /* Вертикальная ориентация */
+    overflow: hidden;
+    /* Обрезаем всё за пределами блока */
+    /* text-overflow: clip; */
+    max-height: 37px;
+    width: auto;
+}
+
+.card-container{
+    margin-top: 0px;
+    margin-bottom: 0px!important;
+    margin-left: 5px!important;
+    margin-right: 5px!important;
+    padding: 10px!important;
+    background: white!important;
+    border-radius: 5px!important;
+}
+
+.card-container-mleft{
+    margin-top: 0px;
+    margin-bottom: 0px!important;
+    margin-left: 5px!important;
+    margin-right: 0px!important;
+    padding: 10px!important;
+    background: white!important;
+    border-radius: 5px!important;
+}
+
+.card-container-mright{
+    margin-top: 0px;
+    margin-bottom: 0px!important;
+    margin-left: 0px!important;
+    margin-right: 5px!important;
+    padding: 10px!important;
+    background: white!important;
+    border-radius: 5px!important;
+}
+
+.half-height-container{
+    /* 
+        56px = header
+        60px = title
+        2 * 10px = margin
+        2 * 8px = padding
+    */
+    height: calc((100svh - 56px - 60px - 20px ) / 2);
+    max-height: calc((100svh - 56px - 60px - 20px) / 2);
+}
+
+.full-height-container{
+    /* 
+        56px = header
+        60px = title
+        2 * 10px = margin
+        2 * 8px = padding
+    */
+    height: calc(100svh - 56px - 60px - 20px);
+    max-height: calc(100svh - 56px - 60px - 20px);
+}
+
+.half-height-content-container{
+    height: calc((100svh - 56px - 60px - 20px) / 2 - 20px - 37px - 17px - 10px);
+    max-height: calc((100svh - 56px - 60px - 20px) / 2 - 20px - 37px - 17px - 10px);
+    overflow-y: auto;
+}
+
+.full-height-content-container{
+    height: calc((100svh - 56px - 60px - 20px) - 10px - 48px - 0.8px - 8px - 2px);
+    max-height: calc((100svh - 56px - 60px - 20px) - 10px - 48px - 0.8px - 8px - 2px);
+    overflow-y: auto;
+}

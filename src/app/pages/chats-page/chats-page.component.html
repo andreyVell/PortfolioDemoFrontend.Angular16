@@ -1,0 +1,78 @@
+<app-navigation-header (searchFieldContentChanged)="chatService.pageSettings.OnFilterStringChanged($event)"
+    (searchFieldEnterPressed)="chatService.pageSettings.ApplyFilter()" [isSarchFieldVisible]='true'
+    (searchFieldEscPressed)="chatService.pageSettings.ClearFilterAndRefresh()"
+    searchFieldPlaceHolder="Поиск диалогов или сообщений...">
+    <div class="workblock-background">
+        <div class="row p-0 m-0 d-flex justify-content-center" style="padding: 10px!important;">
+            <div *ngIf="!IsSmallScreen(); else smallScreenChatsContainer" class="col-auto big-screen-chats-container">
+                <div class="row p-0 m-0 h-100 d-flex justify-content-between">
+                    <div class="col-auto big-screen-chats-info-container right-border">
+                        <div class="row m-0 p-0 bottom-border" style="height: 49px">
+                            <button *ngIf="HasCreateAccessTo('Chat')" style="height: 49px" mat-button color="primary"
+                                (click)="OpenChatCreator()">
+                                <div class="d-flex align-items-center">
+                                    <span style="font-size: 22px" class="material-symbols-outlined pe-2">
+                                        add
+                                    </span>
+                                    <span>Создать чат</span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="row m-0 p-0 chats-list" ScrollEndTracker [pixelsToScrollBottomToEmitEvent]="200"
+                            (scrollEnd)="LoadMoreChats()">
+                            <div class="col m-0 p-0">
+                                <div *ngFor="let chat of chatService.chats">
+                                    <app-chat-in-list [chat]="chat" (click)="ChatSelected(chat)"></app-chat-in-list>
+                                </div>
+                                <div *ngIf="IsMoreChatsLoading" class="row m-0 p-0">
+                                    <app-loading-indication class="d-flex justify-content-center" [width]="50"
+                                        [height]="50"></app-loading-indication>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngTemplateOutlet="ActiveChatTemplate"></ng-container>
+                </div>
+            </div>
+            <ng-template #smallScreenChatsContainer>
+                <div class="col small-screen-chats-container">
+                    <div class="row p-0 m-0 h-100 d-flex justify-content-between">
+                        <div *ngIf="!selectedChatId; else ActiveChatTemplate"
+                            class="col small-screen-chats-info-container">
+                            <div class="row m-0 p-0 bottom-border" style="height: 49px">
+                                <button *ngIf="HasCreateAccessTo('Chat')" style="height: 49px" mat-button
+                                    color="primary" (click)="OpenChatCreator()">
+                                    <div class="d-flex align-items-center">
+                                        <span style="font-size: 22px" class="material-symbols-outlined pe-2">
+                                            add
+                                        </span>
+                                        <span>Создать чат</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="row m-0 p-0 small-chats-list" ScrollEndTracker
+                                [pixelsToScrollBottomToEmitEvent]="100" (scrollEnd)="LoadMoreChats()">
+                                <div class="col m-0 p-0">
+                                    <div *ngFor="let chat of chatService.chats">
+                                        <app-chat-in-list [chat]="chat" (click)="ChatSelected(chat)"></app-chat-in-list>
+                                    </div>
+                                    <div *ngIf="IsMoreChatsLoading" class="row m-0 p-0">
+                                        <app-loading-indication class="d-flex justify-content-center" [width]="50"
+                                            [height]="50"></app-loading-indication>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #ActiveChatTemplate>
+                <div class="col chat-messages-container">
+                    <app-active-chat [activeChat]="ActiveChat" (backToChatsListPressed)="BackToChatsList()"></app-active-chat>
+                </div>
+            </ng-template>
+
+        </div>
+    </div>
+</app-navigation-header>

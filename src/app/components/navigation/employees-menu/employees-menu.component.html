@@ -1,0 +1,17 @@
+<div class="page-menu-container">
+    <div class="row p-0 pt-5">        
+        <span style="font-size:30px; font-weight: 500; line-height: 35px">Управление сотрудниками</span>        
+    </div>
+    <a *ngIf="HasReadAccessTo('Employee')" class="row d-flex page-menu-item" routerLink="/Employees" routerLinkActive="page-menu-item-active" [routerLinkActiveOptions]="{exact:true}">        
+        Сотрудники
+    </a>    
+    <a *ngIf="HasReadAccessTo('Position')" class="row d-flex page-menu-item" routerLink="/Employees/Positions" routerLinkActive="page-menu-item-active" [routerLinkActiveOptions]="{exact:true}">        
+        Должности
+    </a>    
+    <a *ngIf="HasReadAccessTo('Division')" class="row d-flex page-menu-item" routerLink="/Employees/Divisions" routerLinkActive="page-menu-item-active" [routerLinkActiveOptions]="{exact:true}">        
+        Подразделения
+    </a>    
+    <a *ngIf="HasReadAccessTo('AvetonRole')" class="row d-flex page-menu-item" routerLink="/Employees/Roles" routerLinkActive="page-menu-item-active" [routerLinkActiveOptions]="{exact:true}">        
+        Роли
+    </a>
+</div>

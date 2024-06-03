@@ -1,0 +1,54 @@
+<div class="row p-0 m-0" style="overflow: hidden;">
+    <div class="col p-0 m-0">
+        <div *ngIf="(getImagesFromSelectedFiles()?.length ?? 0) > 0">
+            <div class="row p-0 m-0 d-inline-flex w-100" *ngFor="let rowIndex of getRowsCountArray()">
+                <div class="col p-0 m-0 ms-1 me-1 file-image-small-container"
+                    *ngFor="let image of getImagesForRowArray(rowIndex)">
+                    <img [src]="image.mediumImage.fileContent" alt="Изображение" class="file-image-small"
+                        (click)="OpenImageBigScreen(image)" *ngIf="image.mediumImage.fileContent; else noImageFound">
+                    <ng-template #noImageFound>
+                        <app-loading-indication class="file-image-small loading-indication" [width]="140"
+                            [height]="140"></app-loading-indication>
+                    </ng-template>
+                    <button *ngIf="canDelete" [disabled]="image.isFileDownloading" mat-icon-button
+                        color="primary" matTooltip="Открепить"
+                        [style]="image.isFileDownloading || image.isFileCreating? 'padding: 6px!important;':''"
+                        (click)="DeleteFile(image)" class="small-icon-button image-delete-button">
+                        <mat-icon>delete_outline</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row p-0 m-0 w-auto" *ngFor="let file of getJustFilesFromSelectedFiles()">
+            <div *ngIf="canDelete && !file.isFileCreating" class="col-auto p-0 m-0 d-flex align-items-center">
+                <button [disabled]="file.isFileDownloading" mat-icon-button color="primary" matTooltip="Открепить"
+                    [style]="file.isFileDownloading || file.isFileCreating? 'padding: 6px!important;':''"
+                    (click)="DeleteFile(file)" class="small-icon-button">
+                    <mat-icon>delete_outline</mat-icon>
+                </button>
+            </div>
+            <div class="col-auto p-0 m-0 d-flex align-items-center">
+                <button [disabled]="file.isFileDownloading || file.isFileCreating"
+                    [style]="file.isFileDownloading || file.isFileCreating? 'padding: 6px!important;':''"
+                    mat-icon-button color="primary" matTooltip="Скачать" (click)="DownloadFileContent(file)"
+                    class="small-icon-button">
+                    <span *ngIf="!file.isFileDownloading && !file.isFileCreating; else loading"
+                        class="material-symbols-outlined">
+                        download
+                    </span>
+                    <ng-template #loading>
+                        <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                    </ng-template>
+                </button>
+            </div>
+            <div [class]='canDelete ? "file-name-container-with-delete-button" : "file-name-container"'>
+                <div class="row p-0 m-0">
+                    <span class="file-name">
+                        {{file.fileName}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

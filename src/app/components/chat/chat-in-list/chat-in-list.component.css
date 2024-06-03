@@ -1,0 +1,93 @@
+.chat-row-container {
+    width: 100%;
+    height: 63px;
+    overflow: hidden;
+}
+
+.chat-row-container:hover {
+    background: #f5f6f7;
+    cursor: pointer;
+}
+
+.chat-row-container-active {
+    background-color: var(--default-menu-selected-item);
+}
+
+.chat-row-container-active:hover {
+    background-color: var(--default-menu-selected-item);
+    cursor: pointer;
+}
+
+.small-chat-avatar-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.small-chat-avatar-image-container {
+    height: 49px !important;
+    width: 49px !important;
+    border-radius: 50%;
+    background: white;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-chat-info-container {
+    margin: 0px !important;
+    padding: 8px 0px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.chat-name {
+    font-weight: 500;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.last-message-date-time {
+    font-size: 12.5px;
+    color: var(--gray-color);
+}
+
+.last-message-owner-name {
+    font-size: 14px;
+    color: var(--gray-color);
+}
+
+.last-message-content {
+    margin-top: 6px !important;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.your-last-unviewed-message-indication {
+    margin-top: 6px !important;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: var(--main-light-font-color);
+}
+
+.unviewed-messages-indication {
+    margin-top: 6px !important;
+    padding: 0 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 20px;
+    min-width: 20px;
+    border-radius: 18px;
+    color: white;
+    font-size: 12px;
+    background-color: var(--main-light-font-color);
+}

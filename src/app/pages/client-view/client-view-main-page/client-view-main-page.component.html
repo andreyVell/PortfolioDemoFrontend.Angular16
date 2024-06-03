@@ -1,0 +1,66 @@
+<app-client-navigation-header (searchFieldContentChanged)="pageSettings.OnFilterStringChanged($event)"
+    (searchFieldEnterPressed)="pageSettings.ApplyFilter()"
+    (searchFieldEscPressed)="pageSettings.ClearFilterAndRefresh()"
+    (searchFieldEscPressed)="pageSettings.ClearFilterAndRefresh()" [isSarchFieldVisible]='true'
+    searchFieldPlaceHolder="Поиск проектов...">
+    <div class="workblock-background">
+        <div class="row p-0 m-0 d-flex justify-content-center">
+            <div class="col-auto p-0 m-0">
+                <div
+                    [class]="IsExtraSmallScreen() ? 'small-project-page-controlling-container' : 'project-page-controlling-container'">
+                    <div>
+                        <div class="row p-0 m-0 d-flex w-100 justify-content-between">
+                            <div class="col-auto m-0 p-0">
+                                <span style="font-size: 24px; font-weight: 500;">Проекты</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row p-0 m-0 mt-2 justify-content-between">
+                        <div class="col-auto p-0 d-flex justify-content-start align-items-center">
+                            <span class="elements-per-page-label">Элементов на странице:&nbsp;</span>
+                            <div class="custom-field-container" style="max-width: 100px;">
+                                <mat-form-field appearance="outline" class="custom-field">
+                                    <mat-select [(value)]="pageSettings.itemsPerPage"
+                                        (selectionChange)="pageSettings.ItemsPerPageChanged()">
+                                        <mat-option *ngFor="let itemsPerPageNumber of pageSettings.itemsPerPageOptions"
+                                            [value]="itemsPerPageNumber">{{itemsPerPageNumber}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-auto p-0 d-flex justify-content-end align-items-center">
+                            <div style="min-width: 250px;" class="d-flex justify-content-end align-items-center">
+                                <span style="font-size: 16px; margin-right: 10px;">{{pageSettings.CurrentPageMin()}} -
+                                    {{pageSettings.CurrentPageMax()}} из
+                                    {{pageSettings.totalItems}}</span>
+                                <button mat-icon-button color="primary" matTooltip="Предыдущая страница"
+                                    [disabled]="!pageSettings.IsPreviousPageButtonActive()"
+                                    (click)="pageSettings.PreviousPageClick()">
+                                    <mat-icon>arrow_back_ios</mat-icon>
+                                </button>
+                                <button mat-icon-button color="primary" matTooltip="Следующая страница"
+                                    [disabled]="!pageSettings.IsNextPageButtonActive()"
+                                    (click)="pageSettings.NextPageClick()">
+                                    <mat-icon>arrow_forward_ios</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row p-0 m-0"
+                    [class]="IsExtraSmallScreen() ? 'small-project-page-projects-container' : 'project-page-projects-container'">
+                    <div class="col-auto p-0 m-0" *ngFor="let project of projects">
+                        <app-client-project-card *ngIf="!IsExtraSmallScreen(); else extraSmallScreen"
+                            [project]="project"></app-client-project-card>
+                        <ng-template #extraSmallScreen>
+                            <div class="row p-0 m-0">
+                                <app-client-small-project-card class="p-0"
+                                    [project]="project"></app-client-small-project-card>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-client-navigation-header>

@@ -1,0 +1,86 @@
+<div [class]='IsSmallScreen()? "small-employee-roles-container":"employee-roles-container"'
+    [class.disabled-container]="!HasUpdateAccessTo('AvetonUser')">
+    <div class="row m-0 p-0">
+        <div class="row m-0 p-0 pt-2"
+            *ngIf="!credentialsFormVisable && !employee.credentialsId && HasCreateAccessTo('AvetonUser')">
+            <button mat-stroked-button color="primary" (click)="OpenNewUserForm()">Создать данные для входа</button>
+        </div>
+        <div class="row m-0 p-0" *ngIf="credentialsFormVisable || employee.credentialsId">
+            <div class="col m-0 p-0">
+                <div class="row m-0 p-0 d-flex align-items-center pt-4">
+                    <div class="col">
+                        <mat-form-field appearance="outline" class="w-100" [class.error]="!avetonUserRequest.login">
+                            <mat-label>
+                                Логин (По умолчанию Email)
+                            </mat-label>
+                            <input matInput type="text" [(ngModel)]="avetonUserRequest.login">
+                            <mat-hint>
+                                <small *ngIf="!avetonUserRequest.login" class="text-danger">
+                                    *Необходимо указать логин
+                                </small>
+                            </mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row m-0 p-0 d-flex align-items-center">
+                    <div class="col">
+                        <mat-form-field appearance="outline" class="w-100" [class.error]="!avetonUserRequest.password">
+                            <mat-label>
+                                Пароль (По умолчанию номер телефона)
+                            </mat-label>
+                            <input matInput type="text" [(ngModel)]="avetonUserRequest.password">
+                            <mat-hint>
+                                <small *ngIf="!avetonUserRequest.password" class="text-danger">
+                                    *Необходимо указать пароль
+                                </small>
+                            </mat-hint>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div *ngIf="employee.credentialsId ? HasUpdateAccessTo('AvetonUser') : HasCreateAccessTo('AvetonUser')"
+                    class="row m-0 p-0 d-flex align-items-center">
+                    <div class="col">
+                        <button [disabled]="isCredentialsProcessing || !avetonUserRequest.login || !avetonUserRequest.password" mat-stroked-button color="primary" class="w-100 text-center"
+                            type="submit" (click)="CreateUpdateNewUser()">
+                            <span *ngIf="!isCredentialsProcessing; else loading">
+                                {{employee.credentialsId ? 'Обновить данные для входа' : 'Добавить'}}
+                            </span>
+                            <ng-template #loading>
+                                <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                            </ng-template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col m-0 p-0" *ngIf="this.employee.credentialsId">
+                <div class="row m-0 p-0 d-flex align-items-center pt-4">
+                    <div class="col">
+                        <span style="font-size: 24px; font-weight: 500">Роли:</span>
+                    </div>
+                </div>
+                <div class="row m-0 p-0 d-flex align-items-center pt-2">
+                    <div class="col">
+                        <mat-chip-listbox>
+                            <span *ngIf="employee.roles.length < 1" style="font-style: italic;">
+                                <пусто>
+                            </span>
+                            <button *ngIf="HasUpdateAccessTo('AvetonUser')" matRipple matTooltip="Добавить роль"
+                                class="mat-chip-add-button" (click)="AddRole()">
+                                <mat-icon color="primary">add</mat-icon>
+                            </button>
+                            <mat-chip *ngFor="let role of employee.roles"
+                                [class.mat-chip-primary-style]="role.isSystemAdministrator">
+                                <button *ngIf="HasDeleteAccessTo('AvetonUser')" matTooltip="Удалить роль" matChipRemove
+                                    (click)="DeleteRole(role)">
+                                    <mat-icon>cancel</mat-icon>
+                                </button>
+                                <span [class.mat-chip-primary-font-style]="role.isSystemAdministrator"
+                                    style="font-size: 16px;">{{role.name}}</span>
+                            </mat-chip>
+                        </mat-chip-listbox>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

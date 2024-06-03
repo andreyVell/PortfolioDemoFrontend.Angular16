@@ -1,0 +1,12 @@
+.employee-personal-info-container{
+    border-radius: 5px;
+    
+    overflow-y: auto;
+    max-height: calc(100svh - 56px - 20px - 180px - 70px - 48px - 30px);
+    height: calc(100svh - 56px - 20px - 180px - 70px - 48px - 30px);
+}
+
+.small-employee-personal-info-container{
+    border-radius: 5px;    
+    overflow-y: auto;
+}

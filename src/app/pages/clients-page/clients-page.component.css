@@ -1,0 +1,13 @@
+.client-page-entity-table-container {
+  overflow-y: auto;
+  overflow-x: auto;
+  align-content: flex-start;
+  max-height: calc(100svh - 56px - 20px - 72px - 40px - 48px - 8px);
+}
+
+.small-client-page-entity-table-container {
+  overflow-y: auto;
+  overflow-x: auto;
+  align-content: flex-start;
+  max-height: calc(100svh - 56px - 20px - 20px - 76px - 88px - 8px);
+}

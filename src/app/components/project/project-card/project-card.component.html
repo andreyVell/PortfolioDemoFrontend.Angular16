@@ -1,0 +1,76 @@
+<div class="project-card-container">
+    <a style="text-decoration: none !important;" [routerLink]="'/Projects/Details/' + project.id + '/Info'">
+        <div class="row p-0 m-0 d-flex justify-content-between">
+            <div class="col-8 p-0 m-0">
+                <span class="project-card-title" [matTooltip]="project.name" matTooltipShowDelay="500">
+                    {{project.name}}
+                </span>
+            </div>
+            <div class="col-4 p-0 m-0">
+                <span class="p-0 d-flex justify-content-end" style="font-size: 14px; color: gray;">
+                    {{project.createdOn | date:'dd MMM yyyy' }}
+                </span>
+            </div>
+        </div>
+        <div class="row m-0 p-0 mt-2 d-flex align-items-center" *ngIf="project.currentProgress != -1">
+            <div class="col m-0 p-0 d-flex justify-content-start align-items-center">                
+                <span style="font-size: 20px" class="material-symbols-outlined" [class]="GetCompletionStatusClass()">
+                    radio_button_checked
+                </span>
+                <div style="width: 150px;">
+                    <span [class]="GetCompletionStatusClass()">&nbsp;{{GetCompletionStatus()}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="row p-0 m-0 mt-1  d-flex justify-content-between">
+            <div class="col p-0 m-0">
+                <span class="project-card-label">
+                    Менеджер:
+                </span>
+            </div>
+            <div class="col p-0 m-0">
+                <span class="project-card-content justify-content-start">
+                    {{project.manager?.GetLastNameAndInitials()}}
+                </span>
+            </div>
+        </div>
+        <div class="row p-0 m-0 d-flex justify-content-between">
+            <div class="col p-0 m-0">
+                <span class="project-card-label">
+                    Заказчик:
+                </span>
+            </div>
+            <div class="col p-0 m-0">
+                <span *ngFor="let client of project.clients.slice(0, 2)"
+                    class="project-card-content justify-content-start">
+                    {{client.GetClientShortName()}}
+                </span>
+                <span *ngIf="project.clients.length > 2" class="project-card-content justify-content-start">
+                    <button class="more-button" [matTooltip]="project.GetClientsFullString()"
+                        matTooltipClass="multiline-tooltip">
+                        <mat-icon>more_horiz</mat-icon>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div class="row p-0 m-0 d-flex justify-content-between">
+            <div class="col p-0 m-0">
+                <span class="project-card-label">
+                    Исполнитель:
+                </span>
+            </div>
+            <div class="col p-0 m-0">
+                <span *ngFor="let contractor of project.contractors.slice(0, 2)"
+                    class="project-card-content justify-content-start">
+                    {{contractor.name}}
+                </span>
+                <span *ngIf="project.contractors.length > 2" class="project-card-content justify-content-start">
+                    <button class="more-button" [matTooltip]="project.GetContractorsFullString()"
+                        matTooltipClass="multiline-tooltip">
+                        <mat-icon>more_horiz</mat-icon>
+                    </button>
+                </span>
+            </div>
+        </div>
+    </a>
+</div>

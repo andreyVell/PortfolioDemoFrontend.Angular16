@@ -1,0 +1,106 @@
+<div [class.disabled-container]="!HasUpdateAccessTo('Organization')">
+    <div class="row m-0 p-0">
+        <div class="col d-flex align-items-center">
+            <span style="font-weight: 500; font-size: 25px;">
+                Редактирование организации
+            </span>
+        </div>
+        <div class="col-auto m-0 p-0">
+            <button mat-icon-button color="primary" matTooltip="Закрыть" (click)="CloseForm()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0">
+        <form class="mt-3" [formGroup]="organizationForm">
+            <div mat-dialog-content class="pt-1 pb-1 ps-0 pe-0 d-flex justify-content-center" style="max-width: 550px">
+                <div class="row mb-2 w-100">                    
+                    <mat-form-field appearance="outline" class="w-100"
+                        [class.error]="organizationForm.controls['name'].dirty && organizationForm.hasError('required', 'name')">
+                        <mat-label>
+                            Название
+                        </mat-label>
+                        <input matInput type="text" formControlName="name">
+                        <mat-hint>
+                            <small
+                                *ngIf="organizationForm.controls['name'].dirty && organizationForm.hasError('required', 'name')"
+                                class="text-danger">
+                                *Необходимо указать Название
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>
+                            ИНН
+                        </mat-label>
+                        <input matInput type="text" formControlName="inn">                        
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>
+                            Email
+                        </mat-label>
+                        <input matInput type="email" formControlName="contactEmail">                        
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>
+                            Номер телефона
+                        </mat-label>
+                        <input matInput type="text" formControlName="contactPhone">                        
+                    </mat-form-field>                    
+                    <span style="font-weight: 500; font-size: 20px; color: black;">
+                        Данные для входа клиента в систему:
+                    </span>
+                    <mat-form-field appearance="outline" class="w-100" style="margin-top: 15px"
+                        [class.error]="organizationForm.controls['login'].dirty && organizationForm.hasError('required', 'login')">
+                        <mat-label>
+                            Логин
+                        </mat-label>
+                        <input matInput type="text" formControlName="login">
+                        <mat-hint>
+                            <small
+                                *ngIf="organizationForm.controls['login'].dirty && organizationForm.hasError('required', 'login')"
+                                class="text-danger">
+                                *Необходимо указать логин
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100"
+                        [class.error]="organizationForm.controls['password'].dirty && organizationForm.hasError('required', 'password')">
+                        <mat-label>
+                            Пароль
+                        </mat-label>
+                        <input matInput type="text" formControlName="password">
+                        <mat-hint>
+                            <small
+                                *ngIf="organizationForm.controls['password'].dirty && organizationForm.hasError('required', 'password')"
+                                class="text-danger">
+                                *Необходимо указать пароль
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div mat-dialog-actions class="action d-flex justify-content-center p-0">
+                <div class="row d-flex justify-content-center w-100">
+                    <div *ngIf="HasUpdateAccessTo('Organization')" class="col">                        
+                        <button [disabled]="isOrganizationUpdating" mat-flat-button color="primary" class="w-100 text-center"
+                            type="submit" (click)="OnFormSubmit()">
+                            <span *ngIf="!isOrganizationUpdating; else loading">
+                                Сохранить
+                            </span>
+                            <ng-template #loading>
+                                <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                            </ng-template>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button mat-stroked-button [disabled]="isOrganizationUpdating" color="primary" class="w-100 text-center" type="button"
+                            (click)="CloseForm()">
+                            Отмена
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

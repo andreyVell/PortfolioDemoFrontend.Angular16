@@ -1,0 +1,67 @@
+<div>
+    <div class="row m-0 p-0">
+        <div class="col d-flex align-items-center">
+            <span style="font-weight: 500; font-size: 25px;">
+                Информация об отчёте
+            </span>
+        </div>
+        <div class="col-auto m-0 p-0">
+            <button mat-icon-button color="primary" matTooltip="Закрыть" (click)="CloseForm()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+    </div>
+    <div class="row m-0 p-0">
+        <div mat-dialog-content class="pt-2 ps-0 pe-0 pb-0 d-flex justify-content-center"
+            style="max-width: 750px; max-height: calc(80svh - 48px - 1.75rem)!important">
+            <div class="row mb-2 w-100" style="padding: 0px 12px">
+                <span class="d-flex justify-content-end" style="font-size: 18px">
+                    {{stageReport.reportDate | date:"d MMMM yyyy"}}
+                </span>
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>
+                        Название
+                    </mat-label>
+                    <textarea readonly="true" matInput type="text" [(ngModel)]="stageReport.name" rows="2"
+                        maxlength="500"></textarea>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>
+                        Содержание
+                    </mat-label>
+                    <textarea readonly="true" matInput type="text" [(ngModel)]="stageReport.content" rows="4"
+                        maxlength="2000"></textarea>
+                </mat-form-field>
+                <div class="row p-0 m-0 pt-2">
+                    <div class="col-auto d-flex align-items-center">
+                        <span class="p-0" style="color: black; font-size: 18px">
+                            Файлы ({{stageReport.attachedFiles.length}}):
+                        </span>
+                    </div>
+                </div>
+                <div class="row p-0 m-0 mt-1"
+                    [style]='IsSmallScreen() ? "" : "max-height: calc(100% - 33px - 111px - 159px - 41px - 61px); overflow-y: auto"'>
+                    <div class="col p-0 m-0">
+                        <app-files-visualizer
+                            *ngIf="stageReport.attachedFiles.length > 0"
+                            [files]="stageReport.attachedFiles"
+                            [canDelete]="false"
+                            (downloadFileContent)="DownloadFileContent($event)"
+                            (getImageMediumContent)="GetImageMediumContent($event)"
+                            (getImageFullContent)="GetImageFullContent($event)"></app-files-visualizer>
+                    </div>
+                </div>
+                <div mat-dialog-actions class="action d-flex justify-content-center p-0">
+                    <div class="row d-flex justify-content-center w-100">
+                        <div class="col">
+                            <button mat-stroked-button color="primary" class="w-100 text-center" type="button"
+                                (click)="CloseForm()">
+                                Закрыть
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

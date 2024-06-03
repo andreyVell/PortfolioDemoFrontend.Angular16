@@ -1,0 +1,142 @@
+<div [class]='IsSmallScreen()? "small-employee-personal-info-container" : "employee-personal-info-container"'
+    [class.disabled-container]="!HasUpdateAccessTo('Employee')">
+    <div class="row m-0 p-0">
+        <div class="col m-0 p-0">
+            <div class="row m-0 p-0 d-flex align-items-center pt-4">
+                <div class="col">
+                    <mat-form-field appearance="outline" class="w-100" [class.error]="!employee.lastName">
+                        <mat-label>
+                            Фамилия
+                        </mat-label>
+                        <input matInput type="text" [(ngModel)]="employee.lastName">
+                        <mat-hint>
+                            <small *ngIf="!employee.lastName" class="text-danger">
+                                *Необходимо указать фамилию
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row m-0 p-0 d-flex align-items-center">
+                <div class="col">
+                    <mat-form-field appearance="outline" class="w-100" [class.error]="!employee.firstName">
+                        <mat-label>
+                            Имя
+                        </mat-label>
+                        <input matInput type="text" [(ngModel)]="employee.firstName">
+                        <mat-hint>
+                            <small *ngIf="!employee.firstName" class="text-danger">
+                                *Необходимо указать имя
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row m-0 p-0 d-flex align-items-center">
+                <div class="col">
+                    <mat-form-field appearance="outline" class="w-100" [class.error]="!employee.secondName">
+                        <mat-label>
+                            Отчество
+                        </mat-label>
+                        <input matInput type="text" [(ngModel)]="employee.secondName">
+                        <mat-hint>
+                            <small *ngIf="!employee.secondName" class="text-danger">
+                                *Необходимо указать отчество
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row m-0 p-0 d-flex align-items-center">
+                <div class="col">
+                    <mat-form-field appearance="outline" class="w-100" [class.error]="!employee.mobilePhoneNumber">
+                        <mat-label>
+                            Номер телефона
+                        </mat-label>
+                        <input matInput type="text" [(ngModel)]="employee.mobilePhoneNumber">
+                        <mat-hint>
+                            <small *ngIf="!employee.mobilePhoneNumber" class="text-danger">
+                                *Необходимо указать номер телефона
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row m-0 p-0 d-flex align-items-center">
+                <div class="col">
+                    <mat-form-field appearance="outline" class="w-100" [class.error]="!employee.email">
+                        <mat-label>
+                            E-mail
+                        </mat-label>
+                        <input matInput type="email" [(ngModel)]="employee.email">
+                        <mat-hint>
+                            <small *ngIf="!employee.email" class="text-danger">
+                                *Необходимо указать E-mail
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row m-0 p-0 d-flex align-items-center">
+                <div class="col">
+                    <mat-form-field appearance="outline" class="w-100" [class.error]="!employee.birthday">
+                        <mat-label>День рождения</mat-label>
+                        <input matInput [matDatepicker]="birthdayPicker" [(ngModel)]="employee.birthday">
+                        <mat-datepicker-toggle [disabled]="!HasUpdateAccessTo('Employee')" matIconSuffix
+                            [for]="birthdayPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #birthdayPicker></mat-datepicker>
+                        <mat-hint>
+                            <small *ngIf="!employee.birthday" class="text-danger">
+                                *Необходимо указать день рождения
+                            </small>
+                        </mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="col m-0 p-0">
+            <div class="row m-0 p-0 d-flex align-items-center pt-4">
+                <span style="font-size: 24px; font-weight: 500">Место работы:</span>
+            </div>
+            <div class="row m-0 p-0 d-flex align-items-center pt-4">
+                <div class="col">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>
+                            Должность
+                        </mat-label>
+                        <input readonly="true" matInput type="text" [value]="employee.lastJob?.positionName">
+                        <button [disabled]="!HasUpdateAccessTo('Employee')" matTooltip="Изменить должность"
+                            mat-icon-button matSuffix color="primary" (click)="SelectPosition()">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row m-0 p-0 d-flex align-items-center">
+                <div class="col">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>
+                            Подразделение
+                        </mat-label>
+                        <input readonly="true" matInput type="text" [value]="employee.lastJob?.divisionName">
+                        <button [disabled]="!HasUpdateAccessTo('Employee')" matTooltip="Изменить подразделение"
+                            mat-icon-button matSuffix color="primary" (click)="SelectDivision()">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row m-0 p-0 d-flex align-items-center">
+                <div class="col">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Начало работы</mat-label>
+                        <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="employee.lastJob!.startDate">
+                        <mat-datepicker-toggle [disabled]="!HasUpdateAccessTo('Employee')" matIconSuffix
+                            [for]="startDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #startDatePicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+.file-name {
+    text-wrap: nowrap;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: black;
+    font-size: 18px;
+    overflow: hidden;
+    padding: 0px !important;
+    height: 20px;
+}
+
+.file-image-container {
+    height: 72px !important;
+    width: 72px !important;
+    border-radius: 10px;
+    background: white;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0.5px solid var(--light-gray-color);
+}
+
+.file-image {
+    height: 72px !important;    
+    width: 100%;    
+    object-fit: cover;
+}
+
+.file-image-preview-container {
+    display: flex;
+    flex-direction: row;
+    overflow-y: hidden;
+    overflow-x: auto;
+    margin-left: 10px;
+    margin-right: 11px;
+}
+
+.image-remove {
+    cursor: pointer;
+    color: var(--main-light-font-color);
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: -2px;
+    top: 0px;
+    height: 24px;
+    border: solid 0.4px white;
+    background: white;
+    border-radius: 50px;
+}
+
+.file-size-title {
+    text-wrap: nowrap;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--gray-color);
+    font-size: 12px;
+    overflow: hidden;
+    padding: 0px !important;
+    height: 20px;
+}
+
+.file-name-container {
+    padding: 0px !important;
+    display: flex;
+    justify-content: center;
+    width: calc(100% - 68px);
+    flex-direction: column;
+}

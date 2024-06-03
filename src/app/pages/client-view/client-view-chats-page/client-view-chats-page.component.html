@@ -1,0 +1,57 @@
+<app-client-navigation-header
+    (searchFieldContentChanged)="clientViewChatService.pageSettings.OnFilterStringChanged($event)"
+    (searchFieldEnterPressed)="clientViewChatService.pageSettings.ApplyFilter()"
+    (searchFieldEscPressed)="clientViewChatService.pageSettings.ClearFilterAndRefresh()" [isSarchFieldVisible]='true'
+    searchFieldPlaceHolder="Поиск диалогов или сообщений...">
+    <div class="workblock-background">
+        <div class="row p-0 m-0 d-flex justify-content-center" style="padding: 10px!important;">
+            <div *ngIf="!IsSmallScreen(); else smallScreenChatsContainer" class="col-auto big-screen-chats-container">
+                <div class="row p-0 m-0 h-100 d-flex justify-content-between">
+                    <div class="col-auto big-screen-chats-info-container right-border">
+                        <div class="row m-0 p-0 chats-list" ScrollEndTracker [pixelsToScrollBottomToEmitEvent]="200"
+                            (scrollEnd)="LoadMoreChats()">
+                            <div class="col m-0 p-0">
+                                <div *ngFor="let chat of clientViewChatService.chats">
+                                    <app-client-chat-in-list [chat]="chat" (click)="ChatSelected(chat)"></app-client-chat-in-list>
+                                </div>
+                                <div *ngIf="IsMoreChatsLoading" class="row m-0 p-0">
+                                    <app-loading-indication class="d-flex justify-content-center" [width]="50"
+                                        [height]="50"></app-loading-indication>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ng-container *ngTemplateOutlet="ActiveChatTemplate"></ng-container>
+                </div>
+            </div>
+            <ng-template #smallScreenChatsContainer>
+                <div class="col small-screen-chats-container">
+                    <div class="row p-0 m-0 h-100 d-flex justify-content-between">
+                        <div *ngIf="!selectedChatId; else ActiveChatTemplate"
+                            class="col small-screen-chats-info-container">
+                            <div class="row m-0 p-0 small-chats-list" ScrollEndTracker
+                                [pixelsToScrollBottomToEmitEvent]="100" (scrollEnd)="LoadMoreChats()">
+                                <div class="col m-0 p-0">
+                                    <div *ngFor="let chat of clientViewChatService.chats">
+                                        <app-client-chat-in-list [chat]="chat" (click)="ChatSelected(chat)"></app-client-chat-in-list>
+                                    </div>
+                                    <div *ngIf="IsMoreChatsLoading" class="row m-0 p-0">
+                                        <app-loading-indication class="d-flex justify-content-center" [width]="50"
+                                            [height]="50"></app-loading-indication>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #ActiveChatTemplate>
+                <div class="col chat-messages-container">
+                    <app-client-active-chat [activeChat]="ActiveChat" (backToChatsListPressed)="BackToChatsList()"></app-client-active-chat>
+                </div>
+            </ng-template>
+
+        </div>
+    </div>
+</app-client-navigation-header>

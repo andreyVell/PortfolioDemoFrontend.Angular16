@@ -1,0 +1,93 @@
+<mat-nav-list>
+    <mat-list-item routerLink="/" routerLinkActive="menu-item-active" [routerLinkActiveOptions]="{exact: true}"
+        matTooltip="Главная" matTooltipPosition="right">
+        <a class="d-flex menu-item" routerLink="/" routerLinkActive="menu-item-active-a"
+            [routerLinkActiveOptions]="{exact: true}">
+            <span class="material-symbols-outlined">
+                home
+            </span>
+            <div *ngIf="IsExpanded" style="padding-left: 10px; color: inherit;">Главная</div>
+        </a>
+    </mat-list-item>
+    <mat-list-item *ngIf="HasReadAccessTo('Project')" routerLink="/Projects" routerLinkActive="menu-item-active"
+        matTooltip="Проекты" matTooltipPosition="right">
+        <a class="d-flex menu-item" routerLink="/Projects" routerLinkActive="menu-item-active-a">
+            <span class="material-symbols-outlined">
+                auto_awesome_mosaic
+            </span>
+            <div *ngIf="IsExpanded" style="padding-left: 10px; color: inherit;">Проекты</div>
+        </a>
+    </mat-list-item>
+    <mat-list-item *ngIf="HasReadAccessTo('Chat')" routerLink="/Chats" routerLinkActive="menu-item-active"
+        [avetonBadge]="chatService.GetCountOfUnviewedChats()" matTooltip="Сообщения" matTooltipPosition="right">
+        <a class="d-flex menu-item" routerLink="/Chats" routerLinkActive="menu-item-active-a">
+            <span class="material-symbols-outlined">
+                chat
+            </span>
+            <div *ngIf="IsExpanded" style="padding-left: 10px; color: inherit;">Сообщения</div>
+        </a>
+    </mat-list-item>
+    <mat-list-item routerLink="/Clients" *ngIf="HasReadAccessTo('Person') || HasReadAccessTo('Organization')"
+        routerLinkActive="menu-item-active" matTooltip="Клиенты" matTooltipPosition="right">
+        <a class="d-flex menu-item" routerLink="/Clients" routerLinkActive="menu-item-active-a">
+            <span class="material-symbols-outlined">
+                handshake
+            </span>
+            <div *ngIf="IsExpanded" style="padding-left: 10px; color: inherit;">Клиенты</div>
+        </a>
+    </mat-list-item>
+    <div *ngIf="!IsSmallScreen()">
+        <mat-list-item
+            *ngIf="HasReadAccessTo('Employee') || HasReadAccessTo('Position')|| HasReadAccessTo('Division')|| HasReadAccessTo('AvetonRole')"
+            routerLink="/Employees" routerLinkActive="menu-item-active" matTooltip="Сотрудники"
+            matTooltipPosition="right" [routerLinkActiveOptions]="{exact: IsSmallScreen()}">
+            <a matListItemTitle class="d-flex menu-item" routerLink="/Employees" routerLinkActive="menu-item-active-a"
+                [routerLinkActiveOptions]="{exact: IsSmallScreen()}">
+                <span class="material-symbols-outlined">
+                    group
+                </span>
+                <div *ngIf="IsExpanded" style="padding-left: 10px; color: inherit;">Сотрудники</div>
+            </a>
+        </mat-list-item>
+    </div>
+
+    <div *ngIf="IsSmallScreen()">
+        <mat-list-item *ngIf="HasReadAccessTo('Employee')" routerLink="/Employees" routerLinkActive="menu-item-active"
+            matTooltip="Сотрудники" matTooltipPosition="right" [routerLinkActiveOptions]="{exact: IsSmallScreen()}">
+            <a matListItemTitle class="d-flex menu-item" routerLink="/Employees" routerLinkActive="menu-item-active-a"
+                [routerLinkActiveOptions]="{exact: IsSmallScreen()}">
+                <span class="material-symbols-outlined">
+                    group
+                </span>
+                <div *ngIf="IsExpanded" style="padding-left: 10px; color: inherit;">Сотрудники</div>
+            </a>
+        </mat-list-item>
+        <mat-list-item routerLink="/Employees/Positions" *ngIf="HasReadAccessTo('Position')"
+            routerLinkActive="menu-item-active" matTooltip="Должности" matTooltipPosition="right">
+            <a class="d-flex menu-item" routerLink="/Employees/Positions" routerLinkActive="menu-item-active-a">
+                <span class="material-symbols-outlined">
+                    assignment_ind
+                </span>
+                <div *ngIf="IsExpanded" style="padding-left: 10px; color: inherit;">Должности</div>
+            </a>
+        </mat-list-item>
+        <mat-list-item routerLink="/Employees/Divisions" *ngIf="HasReadAccessTo('Division')"
+            routerLinkActive="menu-item-active" matTooltip="Подразделения" matTooltipPosition="right">
+            <a class="d-flex menu-item" routerLink="/Employees/Divisions" routerLinkActive="menu-item-active-a">
+                <span class="material-symbols-outlined">
+                    home_work
+                </span>
+                <div *ngIf="IsExpanded" style="padding-left: 10px; color: inherit;">Подразделения</div>
+            </a>
+        </mat-list-item>
+        <mat-list-item routerLink="/Employees/Roles" *ngIf="HasReadAccessTo('AvetonRole')"
+            routerLinkActive="menu-item-active" matTooltip="Роли" matTooltipPosition="right">
+            <a class="d-flex menu-item" routerLink="/Employees/Roles" routerLinkActive="menu-item-active-a">
+                <span class="material-symbols-outlined">
+                    admin_panel_settings
+                </span>
+                <div *ngIf="IsExpanded" style="padding-left: 10px; color: inherit;">Роли</div>
+            </a>
+        </mat-list-item>
+    </div>
+</mat-nav-list>

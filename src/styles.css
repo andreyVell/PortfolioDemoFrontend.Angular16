@@ -1,0 +1,35 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("assets/css/common.css");
+@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+.mat-mdc-snack-bar-container.snack-bar-error {
+    z-index: 991 !important;
+    --mdc-snackbar-container-color: #fcc6c3 !important;
+    --mat-mdc-snack-bar-button-color: black !important;
+    --mat-snack-bar-button-color: black !important;
+    --mdc-snackbar-supporting-text-color: black !important;
+}
+
+.mat-mdc-snack-bar-container.snack-bar-info {
+    z-index: 991 !important;
+    --mdc-snackbar-container-color: #e8e9fd !important;
+    --mat-mdc-snack-bar-button-color: black !important;
+    --mat-snack-bar-button-color: black !important;
+    --mdc-snackbar-supporting-text-color: black !important;
+}
+
+.mat-mdc-snack-bar-container.snack-bar-success {
+    z-index: 991 !important;
+    --mdc-snackbar-container-color: #a3f7a9 !important;
+    --mat-mdc-snack-bar-button-color: black !important;
+    --mat-snack-bar-button-color: black !important;
+    --mdc-snackbar-supporting-text-color: black !important;
+}
+
+.mat-mdc-snack-bar-container.snack-bar-warning {
+    z-index: 991 !important;
+    --mdc-snackbar-container-color: #fcf3e2 !important;
+    --mat-mdc-snack-bar-button-color: black !important;
+    --mat-snack-bar-button-color: black !important;
+    --mdc-snackbar-supporting-text-color: black !important;
+}

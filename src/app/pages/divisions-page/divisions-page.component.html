@@ -1,0 +1,235 @@
+<app-navigation-header (searchFieldContentChanged)="pageSettings.OnFilterStringChanged($event)"
+    (searchFieldEnterPressed)="pageSettings.ApplyFilter()" [isSarchFieldVisible]='true'
+    (searchFieldEscPressed)="pageSettings.ClearFilterAndRefresh()" searchFieldPlaceHolder="Поиск подразделений...">
+    <div class="workblock-background">
+        <div class="row p-0 m-0">
+            <div *ngIf="!IsSmallScreen()" class="col-auto">
+                <app-employees-menu></app-employees-menu>
+            </div>
+            <div class="col"
+                [class]='IsSmallScreen()? "small-employee-page-main-content-container" : "employee-page-main-content-container"'>
+                <div class="row p-0 m-0 d-flex w-100 justify-content-between">
+                    <div class="col-auto">
+                        <span style="font-size: 24px; font-weight: 500;">Подразделения</span>
+                    </div>
+                    <div class="col-auto" [class.p-0]="IsSmallScreen()">
+                        <div class="row p-0 m-0 w-100 d-flex justify-content-center">
+                            <mat-chip-listbox class="justify-content-center" [(ngModel)]="displayMode"
+                                (ngModelChange)="Refresh()">
+                                <div class="w-100 d-flex justify-content-center m-0">
+                                    <mat-chip-option [value]="0">Список</mat-chip-option>
+                                    <mat-chip-option [value]="1">Вложенный список</mat-chip-option>
+                                </div>
+                            </mat-chip-listbox>
+                        </div>
+                    </div>
+                    <div *ngIf="HasCreateAccessTo('Division')" class="col-auto">
+                        <button mat-flat-button color="primary" (click)="CreateDivision()">
+                            <mat-icon>add_home_work</mat-icon>
+                            Добавить подразделение
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="displayMode === 0">
+                    <div class="row p-0 m-0 mt-2 justify-content-between">
+                        <!-- page controling  -->
+                        <div class="col-auto d-flex justify-content-start align-items-center">
+                            <span class="elements-per-page-label">Элементов на странице:&nbsp;</span>
+                            <div class="custom-field-container" style="max-width: 100px;">
+                                <mat-form-field appearance="outline" class="custom-field">
+                                    <mat-select [(value)]="pageSettings.itemsPerPage"
+                                        (selectionChange)="pageSettings.ItemsPerPageChanged()">
+                                        <mat-option *ngFor="let itemsPerPageNumber of pageSettings.itemsPerPageOptions"
+                                            [value]="itemsPerPageNumber">{{itemsPerPageNumber}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-auto p-0 d-flex justify-content-end align-items-center">
+                            <div style="min-width: 250px;" class="d-flex justify-content-end align-items-center">
+                                <span style="font-size: 16px; margin-right: 10px;">{{pageSettings.CurrentPageMin()}} -
+                                    {{pageSettings.CurrentPageMax()}} из
+                                    {{pageSettings.totalItems}}</span>
+                                <button mat-icon-button color="primary" matTooltip="Предыдущая страница"
+                                    [disabled]="!pageSettings.IsPreviousPageButtonActive()"
+                                    (click)="pageSettings.PreviousPageClick()">
+                                    <mat-icon>arrow_back_ios</mat-icon>
+                                </button>
+                                <button mat-icon-button color="primary" matTooltip="Следующая страница"
+                                    [disabled]="!pageSettings.IsNextPageButtonActive()"
+                                    (click)="pageSettings.NextPageClick()">
+                                    <mat-icon>arrow_forward_ios</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row p-0 m-0">
+                        <!-- table -->
+                        <div
+                            [class]='IsSmallScreen()? "small-division-page-entity-table-container" : "division-page-entity-table-container"'>
+                            <table class="table table-hover m-0 table-sticky-header" style="max-width: 50000px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 48px;" class="text-left"></th>
+                                        <th style="min-width: 900px;" class="text-left">Название</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let division of divisions"
+                                        (dblclick)="OpenDivisionDetailsPage(division)">
+                                        <td class="p-0">
+                                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu">
+                                                <button mat-menu-item (click)="OpenDivisionDetailsPage(division)">
+                                                    <mat-icon>edit</mat-icon>
+                                                    <span>Редактировать</span>
+                                                </button>
+                                                <button *ngIf="HasCreateAccessTo('Division')" mat-menu-item
+                                                    (click)="CreateChildDivision(division)">
+                                                    <mat-icon style="padding-right: 16px;">add_home_work</mat-icon>
+                                                    <span>Добавить дочернее подразделение</span>
+                                                </button>
+                                                <mat-divider *ngIf="HasDeleteAccessTo('Division')"></mat-divider>
+                                                <button *ngIf="HasDeleteAccessTo('Division')" mat-menu-item
+                                                    (click)="DeleteDivision(division)">
+                                                    <mat-icon style="color: red;">delete_outline</mat-icon>
+                                                    <span style="color: red;">Удалить</span>
+                                                </button>
+                                            </mat-menu>
+                                        </td>
+                                        <td class="td-text-vertical-center">
+                                            <div class="text-vertical-center">
+                                                <span style="font-size: 16px;">
+                                                    {{division.name}}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="displayMode === 1">
+                    <div class="row p-0 m-0" style="padding-top: 5px!important"
+                        [class]="IsSmallScreen() ? 'd-flex justify-content-center' : ''">
+                        <div class="col-auto">
+                            <button mat-stroked-button (click)="ExpandAll()" color="primary">
+                                <div class="d-flex align-items-center">
+                                    <span class="material-symbols-outlined" [class]="IsSmallScreen() ? '' : 'pe-2'">
+                                        zoom_out_map
+                                    </span>
+                                    <span *ngIf="!IsSmallScreen()">Развернуть всё</span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="col-auto">
+                            <button mat-stroked-button (click)="CollapseAll()" color="primary">
+                                <div class="d-flex align-items-center">
+                                    <span class="material-symbols-outlined" [class]="IsSmallScreen() ? '' : 'pe-2'">
+                                        zoom_in_map
+                                    </span>
+                                    <span *ngIf="!IsSmallScreen()">Свернуть всё</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row p-0 m-0" style="padding-top: 20px!important;">
+                        <div
+                            [class]='IsSmallScreen()? "small-division-page-entity-nested-list-container" : "division-page-entity-nested-list-container"'>
+                            <div>
+                                <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="hierarchy-tree">
+                                    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+                                        <div class="mat-tree-node mat-tree-node-without-childs"
+                                            [class.hovered]="node.mouseOvered" (mouseover)="node.mouseOvered=true"
+                                            (mouseout)="node.mouseOvered=false">
+                                            <span *ngIf="HasChild(0, node)" style="font-size: 20px"
+                                                class="material-symbols-outlined main-color">
+                                                radio_button_checked
+                                            </span>
+                                            <span *ngIf="!HasChild(0, node)" style="font-size: 20px"
+                                                class="material-symbols-outlined main-color">
+                                                circle
+                                            </span>
+                                            <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Действия">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu">
+                                                <button mat-menu-item (click)="OpenDivisionDetailsPage(node)">
+                                                    <mat-icon>edit</mat-icon>
+                                                    <span>Редактировать</span>
+                                                </button>
+                                                <button *ngIf="HasCreateAccessTo('Division')" mat-menu-item
+                                                    (click)="CreateChildDivision(node)">
+                                                    <mat-icon style="padding-right: 16px;">add_home_work</mat-icon>
+                                                    <span>Добавить дочернее подразделение</span>
+                                                </button>
+                                                <mat-divider *ngIf="HasDeleteAccessTo('Division')"></mat-divider>
+                                                <button *ngIf="HasDeleteAccessTo('Division')" mat-menu-item
+                                                    (click)="DeleteDivision(node)">
+                                                    <mat-icon style="color: red;">delete_outline</mat-icon>
+                                                    <span style="color: red;">Удалить</span>
+                                                </button>
+                                            </mat-menu>
+                                            <span style="font-size: 16px;">{{node.name}}</span>
+                                        </div>
+                                    </mat-tree-node>
+                                    <mat-nested-tree-node *matTreeNodeDef="let node; when: HasChild" matTreeNodeToggle>
+                                        <div class="mat-tree-node" [class.hovered]="node.mouseOvered"
+                                            (mouseover)="node.mouseOvered=true" (mouseout)="node.mouseOvered=false">
+                                            <button
+                                                [matTooltip]="treeControl.isExpanded(node) ? 'Свернуть' : 'Развернуть'"
+                                                color="primary" mat-icon-button matTreeNodeToggle>
+                                                <mat-icon class="mat-icon-rtl-mirror">
+                                                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                                </mat-icon>
+                                            </button>
+                                            <span *ngIf="HasChild(0, node)" style="font-size: 20px"
+                                                class="material-symbols-outlined main-color">
+                                                radio_button_checked
+                                            </span>
+                                            <span *ngIf="!HasChild(0, node)" style="font-size: 20px"
+                                                class="material-symbols-outlined main-color">
+                                                circle
+                                            </span>
+                                            <button mat-icon-button [matMenuTriggerFor]="menu"
+                                                (click)="$event.stopPropagation()" matTooltip="Действия">
+                                                <mat-icon>more_vert</mat-icon>
+                                            </button>
+                                            <mat-menu #menu="matMenu">
+                                                <button mat-menu-item (click)="OpenDivisionDetailsPage(node)">
+                                                    <mat-icon>edit</mat-icon>
+                                                    <span>Редактировать</span>
+                                                </button>
+                                                <button *ngIf="HasCreateAccessTo('Division')" mat-menu-item
+                                                    (click)="CreateChildDivision(node)">
+                                                    <mat-icon style="padding-right: 16px;">add_home_work</mat-icon>
+                                                    <span>Добавить дочернее подразделение</span>
+                                                </button>
+                                                <mat-divider *ngIf="HasDeleteAccessTo('Division')"></mat-divider>
+                                                <button *ngIf="HasDeleteAccessTo('Division')" mat-menu-item
+                                                    (click)="DeleteDivision(node)">
+                                                    <mat-icon style="color: red;">delete_outline</mat-icon>
+                                                    <span style="color: red;">Удалить</span>
+                                                </button>
+                                            </mat-menu>
+                                            <span style="font-size: 16px;">{{node.name}}</span>
+                                        </div>
+                                        <div [class.hierarchy-tree-invisible]="!treeControl.isExpanded(node)"
+                                            role="group">
+                                            <ng-container matTreeNodeOutlet></ng-container>
+                                        </div>
+                                    </mat-nested-tree-node>
+                                </mat-tree>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-navigation-header>

@@ -1,0 +1,64 @@
+<div class="outer">
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-5 offset-md-0">
+                <div class="panel border bg-white h-auto" style="min-height: 1px;">
+                    <div class="panel-heading">
+                        <h1 class="pt-3 font-weigth-bold">Вход для сотрудников</h1>
+                    </div>
+                    <div class="panel-body p-3">
+                        <form [formGroup]="loginForm">
+                            <mat-form-field class="w-100" appearance="outline"
+                                [class.error]="loginForm.controls['username'].dirty && loginForm.hasError('required', 'username')">
+                                <mat-label>
+                                    <i class="fa fa-user p-2"></i>                                    
+                                    Имя пользователя (Логин)
+                                </mat-label>
+                                <input matInput type="text" formControlName="username">
+                                <mat-hint>
+                                    <small
+                                        *ngIf="loginForm.controls['username'].dirty && loginForm.hasError('required', 'username')"
+                                        class="text-danger">
+                                        *Необходимо ввести имя пользователя
+                                    </small>
+                                </mat-hint>
+                            </mat-form-field>
+
+                            <mat-form-field class="w-100" appearance="outline"
+                                [class.error]="loginForm.controls['password'].dirty && loginForm.hasError('required', 'password')">
+                                <mat-label>
+                                    <i class="fa fa-lock p-2"></i>
+                                    Пароль
+                                </mat-label>
+                                <input matInput formControlName="password" [type]="inputPasswordType">
+                                <i matSuffix [class]="iconPasswordClass" (click)="HideShowPass()"></i>
+                                <mat-hint>
+                                    <small
+                                        *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required', 'password')"
+                                        class="text-danger">
+                                        *Необходимо ввести пароль
+                                    </small>
+                                </mat-hint>
+                            </mat-form-field>
+                            <div class="row m-0 p-0">
+                                <div class="col d-flex justify-content-center">
+                                    <a *ngIf="!isLoging" class="p-0 link-button" routerLink="/ClientView/Login"
+                                        style="font-size: 17px">Войти как клиент</a>
+                                </div>
+                            </div>
+                            <button [disabled]="isLoging" mat-flat-button color="primary" class="mt-4 w-100"
+                                type="submit" (click)="onSubmitLoginForm()">
+                                <span *ngIf="!isLoging; else loading">
+                                    Войти
+                                </span>
+                                <ng-template #loading>
+                                    <app-loading-indication [width]="36" [height]="36"></app-loading-indication>
+                                </ng-template>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

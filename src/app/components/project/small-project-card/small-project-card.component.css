@@ -1,0 +1,46 @@
+.project-card-container {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 10px;
+    background: white;
+    border-radius: 5px;
+
+    border: 1px solid var(--main-light-color);
+    max-width: calc(100vw - 20px);
+    width: calc(100vw - 20px);
+    cursor: pointer;
+}
+
+.project-card-container:hover{
+    border: 1px solid var(--main-color);
+}
+
+
+.project-card-title{
+    padding: 0px!important;
+    font-size: 20px; 
+    font-weight: 500;     
+    -webkit-line-clamp: 2; /* Число отображаемых строк */
+    display: -webkit-box; /* Включаем флексбоксы */
+    -webkit-box-orient: vertical; /* Вертикальная ориентация */
+    overflow: hidden; /* Обрезаем всё за пределами блока */    
+}
+
+.project-card-label{
+    padding: 0px!important;
+    font-size: 16px;
+    font-weight: 300;  
+    color: gray;
+    font-style: italic;
+}
+
+.project-card-content{
+    padding: 0px!important;
+    font-size: 18px;
+    font-weight: 400;  
+    color: black;
+    display: flex;
+    justify-content: flex-end;
+}
